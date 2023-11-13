@@ -7,24 +7,24 @@ protocol TestPluginInterface {
 
 final class TestPluginObject: TestPluginInterface, PluginLifecycle {
     
-    init() {        
+    init() {
     }
-    
+
     // MARK: TestPluginInterface
-    
+
     func add(lhs: Int, rhs: Int) -> Int {
         return lhs + rhs
     }
-    
+
     // MARK: Plugin
-    
+
     private(set) var state: PluginState = .stopped
-    
-    func start() throws {
+
+    func start() /*async*/ throws {
         state = .started
     }
-    
-    func stop() throws {
+
+    func stop() /*async*/ throws {
         state = .stopped
     }
 }

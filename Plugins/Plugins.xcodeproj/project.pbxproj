@@ -11,7 +11,6 @@
 		8E6779A22AFD01F10089DEE5 /* Plugins.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E6779972AFD01F10089DEE5 /* Plugins.framework */; };
 		8E6779A72AFD01F10089DEE5 /* PluginsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6779A62AFD01F10089DEE5 /* PluginsTests.swift */; };
 		8E6779A82AFD01F10089DEE5 /* Plugins.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E67799A2AFD01F10089DEE5 /* Plugins.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8E6779B52AFD02470089DEE5 /* ExtensionPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6779B12AFD02470089DEE5 /* ExtensionPoint.swift */; };
 		8E6779B62AFD02470089DEE5 /* PluginRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6779B22AFD02470089DEE5 /* PluginRegistry.swift */; };
 		8E6779B72AFD02470089DEE5 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6779B32AFD02470089DEE5 /* Plugin.swift */; };
 		8E6779BA2AFD02520089DEE5 /* TestPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6779B92AFD02520089DEE5 /* TestPlugin.swift */; };
@@ -33,7 +32,6 @@
 		8E67799B2AFD01F10089DEE5 /* Plugins.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Plugins.docc; sourceTree = "<group>"; };
 		8E6779A12AFD01F10089DEE5 /* PluginsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PluginsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E6779A62AFD01F10089DEE5 /* PluginsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginsTests.swift; sourceTree = "<group>"; };
-		8E6779B12AFD02470089DEE5 /* ExtensionPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionPoint.swift; sourceTree = "<group>"; };
 		8E6779B22AFD02470089DEE5 /* PluginRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginRegistry.swift; sourceTree = "<group>"; };
 		8E6779B32AFD02470089DEE5 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
 		8E6779B92AFD02520089DEE5 /* TestPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestPlugin.swift; sourceTree = "<group>"; };
@@ -79,7 +77,6 @@
 		8E6779992AFD01F10089DEE5 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				8E6779B12AFD02470089DEE5 /* ExtensionPoint.swift */,
 				8E6779B32AFD02470089DEE5 /* Plugin.swift */,
 				8E6779B22AFD02470089DEE5 /* PluginRegistry.swift */,
 				8E67799A2AFD01F10089DEE5 /* Plugins.h */,
@@ -207,7 +204,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E6779B62AFD02470089DEE5 /* PluginRegistry.swift in Sources */,
-				8E6779B52AFD02470089DEE5 /* ExtensionPoint.swift in Sources */,
 				8E6779B72AFD02470089DEE5 /* Plugin.swift in Sources */,
 				8E67799C2AFD01F10089DEE5 /* Plugins.docc in Sources */,
 			);

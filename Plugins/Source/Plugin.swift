@@ -14,42 +14,54 @@ public enum PluginState {
 public protocol PluginLifecycle {
     
     var state: PluginState { get }
-        
+    
     func start() /*async*/ throws
     func stop() /*async*/ throws
 }
 
+public enum PluginError: Error {
+    case internalError
+    // TODO get rid (we're exposing internals here)
+    case pluginObjectDoesNotImplementPluginInterface
+    // TODO get rid (we're exposing internals here)
+    case pluginObjectDoesNotImplementPluginLifecycle
+    case notRegistered
+    case alreadyRegistered
+    case couldNotBeStarted
+}
+
 /// A ``PluginHandle`` is a lightweight handle to a plugin.
 ///
-/// The plugin handle transparently handles plugin object instantiation and the plugin lifecycle.
-public final class PluginHandle<PluginInterface> {
-    
-    private weak var registry: PluginRegistry?
-    
-    init(registry: PluginRegistry, pluginObjectType: PluginInterface.Type) {
-        self.registry = registry
-    }
+/// The plugin handle transparently handles the plugin lifecycle.
+//public protocol PluginHandle {
+//
+//    associatedtype PluginInterface
+//
+//    func get() /*async*/ throws -> PluginInterface
+//}
 
+public final class DefaultPluginHandle<PluginInterface>/*: PluginHandle*/ {
+    
+    private let pluginObject: PluginLifecycle
+    private var state: PluginState = .stopped
+    
+    init(pluginObject: PluginLifecycle, pluginInterfaceType: PluginInterface.Type) {
+        self.pluginObject = pluginObject
+    }
+    
     /// Returns the plugin interface.
     ///
     /// Starts the plugin if it is currently stopped.
-    public func get() /*async*/ -> PluginInterface? {
-        guard let registry = registry else {
-            return nil
-        }
-        guard let pluginObject = try? registry.getPluginObject(PluginInterface.self) else {
-            return nil
-        }
+    public func get() /*async*/ throws -> PluginInterface {
         if pluginObject.state == .stopped {
             do {
                 try pluginObject.start()
                 assert(pluginObject.state == .started)
             }
             catch let error {
-                // rethrow?
-                return nil
+                throw error
             }
         }
-        return pluginObject as? PluginInterface
+        return pluginObject as! PluginInterface
     }
 }

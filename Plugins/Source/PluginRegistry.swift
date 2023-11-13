@@ -1,44 +1,35 @@
-public enum PluginRegistryError: Error {
-    case notRegistered
-    case alreadyRegistered
-    case couldNotBeStarted
-}
-
+/// The central registration and lookup facility for plugins.
 public final class PluginRegistry {
     
     private var factories: [String: () -> Any] = [:]
     private var handles: [String: Any] = [:]
-    private var pluginObjects: [String: Any] = [:]
     
-    public func register<PluginObject: PluginLifecycle, PluginInterface>(pluginObjectType: PluginObject.Type,
-                                                                         for pluginInterfaceType: PluginInterface.Type,
-                                                                         factory: @escaping () -> PluginObject) throws {
+    public func register<PluginObject, PluginInterface>(factory: @escaping () -> PluginObject,
+                                                        for pluginInterfaceType: PluginInterface.Type) throws
+    where PluginObject: PluginLifecycle {
         let identifier = String(describing: pluginInterfaceType)
         guard factories[identifier] == nil else {
-            throw PluginRegistryError.alreadyRegistered
+            throw PluginError.alreadyRegistered
         }
         factories[identifier] = factory
     }
     
-    public func lookup<PluginInterface>(_ pluginInterface: PluginInterface.Type) throws -> PluginHandle<PluginInterface> {
+    public func lookup<PluginInterface>(_ pluginInterface: PluginInterface.Type) throws -> DefaultPluginHandle<PluginInterface> {
         let identifier = String(describing: pluginInterface)
-        guard factories[identifier] != nil else {
-            throw PluginRegistryError.notRegistered
+        if let handle = handles[identifier] {
+            return handle as! DefaultPluginHandle<PluginInterface>
         }
-        if handles[identifier] == nil {
-            handles[identifier] = PluginHandle(registry: self, pluginObjectType: PluginInterface.self)
+        guard let factory = factories[identifier] else {
+            throw PluginError.notRegistered
         }
-        return handles[identifier] as! PluginHandle<PluginInterface>
-    }
-    
-    func getPluginObject<PluginInterface>(_ pluginInterface: PluginInterface.Type) throws -> PluginLifecycle? {
-        let identifier = String(describing: pluginInterface)
-        if pluginObjects[identifier] == nil {
-            guard let factory = factories[identifier] else {
-                throw PluginRegistryError.notRegistered
-            }
-            pluginObjects[identifier] = factory()
+        guard let pluginObject = factory() as? PluginInterface else {
+            throw PluginError.pluginObjectDoesNotImplementPluginInterface
         }
-        return pluginObjects[identifier] as? PluginLifecycle
+        guard let pluginObjectLifecycle = pluginObject as? PluginLifecycle else {
+            throw PluginError.pluginObjectDoesNotImplementPluginLifecycle
+        }
+        let handle = DefaultPluginHandle(pluginObject: pluginObjectLifecycle, pluginInterfaceType: PluginInterface.self)
+        handles[identifier] = handle
+        return handle
     }
 }
