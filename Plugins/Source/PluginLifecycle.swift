@@ -16,7 +16,11 @@ public enum PluginState {
 public protocol PluginLifecycle {
     
     var state: PluginState { get }
+    func start() async throws
+    func stop() async throws
     
-    func start() /*async*/ throws
-    func stop() /*async*/ throws
+    var usageCount: Int { get }
+    func incrementUsageCount()
+    func decrementUsageCount()
+    
 }

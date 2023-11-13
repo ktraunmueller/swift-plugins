@@ -5,7 +5,8 @@ public enum PluginError: Error {
     case pluginObjectDoesNotImplementPluginInterface
     // TODO get rid (we're exposing internals here)
     case pluginObjectDoesNotImplementPluginLifecycle
-    case notRegistered
-    case alreadyRegistered
-    case couldNotBeStarted
+    case pluginNotRegistered
+    case pluginAlreadyRegistered
+//    case pluginCouldNotBeStarted
+    case invalidHandle
 }

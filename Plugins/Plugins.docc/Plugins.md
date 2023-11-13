@@ -15,10 +15,12 @@ The functionality provided by a plugin is formalized trough its
 _plugin interface_. Here's a simple example of a plugin interface:
 
 ```swift
-protocol AdderInterface {
+protocol AdderInterface: AnyObject {
     func add(lhs: Int, rhs: Int) -> Int
 }
 ```
+
+> Note: Plugin interfaces must be [class-only protocols](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/protocols#Class-Only-Protocols).
 
 The implementation of the plugin interface is provided by a corresponding _plugin object_:
 
@@ -55,7 +57,7 @@ public protocol PluginLifecycle {
     
     var state: PluginState { get }
     
-    func start() /*async*/ throws
+    func start() /*async throws
     func stop() /*async*/ throws
 }
 ```

@@ -2,7 +2,7 @@
 public final class PluginRegistry {
     
     private var factories: [String: () -> Any] = [:]
-    private var handles: [String: Any] = [:]
+    private var handles: [String: AnyObject] = [:]
     
     /// Register a plugin.
     ///
@@ -14,7 +14,7 @@ public final class PluginRegistry {
     where PluginObject: PluginLifecycle {
         let identifier = String(describing: pluginInterfaceType)
         guard factories[identifier] == nil else {
-            throw PluginError.alreadyRegistered
+            throw PluginError.pluginAlreadyRegistered
         }
         print("PluginRegistry: registering factory for \(identifier)")
         factories[identifier] = factory
@@ -32,7 +32,7 @@ public final class PluginRegistry {
             return handle as! PluginHandle<PluginInterface>
         }
         guard let factory = factories[identifier] else {
-            throw PluginError.notRegistered
+            throw PluginError.pluginNotRegistered
         }
         guard let pluginObject = factory() as? PluginInterface else {
             throw PluginError.pluginObjectDoesNotImplementPluginInterface
@@ -40,8 +40,27 @@ public final class PluginRegistry {
         guard let pluginObjectLifecycle = pluginObject as? PluginLifecycle else {
             throw PluginError.pluginObjectDoesNotImplementPluginLifecycle
         }
-        let handle = PluginHandle(pluginObject: pluginObjectLifecycle, pluginInterfaceType: PluginInterface.self)
+        let handle = PluginHandle(pluginObject: pluginObjectLifecycle,
+                                  pluginInterfaceType: PluginInterface.self,
+                                  registry: self)
         handles[identifier] = handle
         return handle
+    }
+    
+    func discard<PluginInterface>(_ finishedHandle: PluginHandle<PluginInterface>) {
+        for (identifier, handle) in handles {
+            if handle === finishedHandle {
+                print("PluginRegistry: discarding handle for \(identifier)")
+                handles.removeValue(forKey: identifier)
+                break
+            }
+        }
+    }
+    
+    // MARK: Test Support
+    
+    func hasHandle<PluginInterface>(for pluginInterface: PluginInterface.Type) -> Bool {
+        let identifier = String(describing: pluginInterface)
+        return handles[identifier] != nil
     }
 }

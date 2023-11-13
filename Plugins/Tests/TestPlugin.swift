@@ -1,6 +1,6 @@
 import Plugins
 
-protocol AdderInterface {
+protocol AdderInterface: AnyObject {
     func add(lhs: Int, rhs: Int) -> Int
 }
 
@@ -24,14 +24,24 @@ final class AdderObject: AdderInterface, PluginLifecycle {
     // MARK: PluginLifecycle
 
     private(set) var state: PluginState = .stopped
-
-    func start() /*async*/ throws {
+    
+    func start() async throws {
         state = .starting
         state = .started
     }
 
-    func stop() /*async*/ throws {
+    func stop() async throws {
         state = .stopping
         state = .stopped
+    }
+    
+    private(set) var usageCount = 0
+    
+    func incrementUsageCount() {
+        usageCount += 1
+    }
+    
+    func decrementUsageCount() {
+        usageCount -= 1
     }
 }
