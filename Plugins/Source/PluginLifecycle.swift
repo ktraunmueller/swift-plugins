@@ -10,7 +10,9 @@ public enum PluginState {
     case stopping
 }
 
-/// The ``PluginLifecycle`` protocol formalizes the plugin lifecycle.
+/// Plugin objects are required to conform to ``PluginLifecycle``.
+/// 
+/// The plugin lifecycle will be handled transparently by ``PluginHandle``s.
 public protocol PluginLifecycle {
     
     var state: PluginState { get }

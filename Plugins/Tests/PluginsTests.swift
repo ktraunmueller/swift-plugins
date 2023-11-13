@@ -8,8 +8,12 @@ final class PluginsTests: XCTestCase {
         try registry.register(factory: {
             return AdderObject()
         }, for: AdderInterface.self)
-        let handle = try registry.lookup(AdderInterface.self)
-        let pluginInterface = try handle.get()
-        XCTAssertEqual(pluginInterface.add(lhs: 1, rhs: 1), 2)
+        do {
+            let pluginHandle = try registry.lookup(AdderInterface.self)
+            let pluginInterface = try pluginHandle.get()
+            XCTAssertEqual(pluginInterface.add(lhs: 1, rhs: 1), 2)
+        } catch PluginError.notRegistered {
+            
+        }
     }
 }

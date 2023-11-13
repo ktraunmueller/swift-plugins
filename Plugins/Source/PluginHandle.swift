@@ -1,6 +1,7 @@
-/// A ``PluginHandle`` is a lightweight handle to a plugin.
+/// A lightweight handle to a plugin.
 ///
-/// The plugin handle transparently handles the plugin lifecycle.
+/// The plugin handle transparently handles the plugin lifecycle,
+/// and hides the concrete plugin object type from clients.
 public final class PluginHandle<PluginInterface> {
     
     private let pluginObject: PluginLifecycle

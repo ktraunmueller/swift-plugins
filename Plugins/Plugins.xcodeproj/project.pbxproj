@@ -63,6 +63,7 @@
 		8E67798D2AFD01F10089DEE5 = {
 			isa = PBXGroup;
 			children = (
+				8E67799B2AFD01F10089DEE5 /* Plugins.docc */,
 				8E6779992AFD01F10089DEE5 /* Source */,
 				8E6779A52AFD01F10089DEE5 /* Tests */,
 				8E6779982AFD01F10089DEE5 /* Products */,
@@ -86,7 +87,6 @@
 				8EC9EB0A2B02545D0087A565 /* PluginLifecycle.swift */,
 				8E6779B22AFD02470089DEE5 /* PluginRegistry.swift */,
 				8E67799A2AFD01F10089DEE5 /* Plugins.h */,
-				8E67799B2AFD01F10089DEE5 /* Plugins.docc */,
 			);
 			path = Source;
 			sourceTree = "<group>";

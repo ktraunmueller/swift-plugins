@@ -1,9 +1,14 @@
-/// The central registration and lookup facility for plugins.
+/// The central registration and lookup point for plugins.
 public final class PluginRegistry {
     
     private var factories: [String: () -> Any] = [:]
     private var handles: [String: Any] = [:]
     
+    /// Register a plugin.
+    ///
+    /// - Parameters:
+    ///   - factory: The plugin object factory.
+    ///   - pluginInterfaceType: The plugin interface type.
     public func register<PluginObject, PluginInterface>(factory: @escaping () -> PluginObject,
                                                         for pluginInterfaceType: PluginInterface.Type) throws
     where PluginObject: PluginLifecycle {
@@ -15,6 +20,11 @@ public final class PluginRegistry {
         factories[identifier] = factory
     }
     
+    /// Look up a plugin.
+    ///
+    /// - Parameter pluginInterface: The plugin interface type.
+    /// - Returns: A ``PluginHandle`` if successful.
+    /// - Throws: PluginError.notRegistered if the given plugin interface type has not been registered.
     public func lookup<PluginInterface>(_ pluginInterface: PluginInterface.Type) throws -> PluginHandle<PluginInterface> {
         let identifier = String(describing: pluginInterface)
         print("PluginRegistry: looking up handle for \(identifier)")
