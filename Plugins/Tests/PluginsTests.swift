@@ -3,12 +3,12 @@ import XCTest
 
 final class PluginsTests: XCTestCase {
     
-    func testRegistration() throws {
+    func testRegistrationAndLookup() throws {
         let registry = PluginRegistry()
         try registry.register(factory: {
-            return TestPluginObject()
-        }, for: TestPluginInterface.self)
-        let handle = try registry.lookup(TestPluginInterface.self)
+            return AdderObject()
+        }, for: AdderInterface.self)
+        let handle = try registry.lookup(AdderInterface.self)
         let pluginInterface = try handle.get()
         XCTAssertEqual(pluginInterface.add(lhs: 1, rhs: 1), 2)
     }

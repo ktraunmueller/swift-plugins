@@ -11,13 +11,15 @@ public final class PluginRegistry {
         guard factories[identifier] == nil else {
             throw PluginError.alreadyRegistered
         }
+        print("PluginRegistry: registering factory for \(identifier)")
         factories[identifier] = factory
     }
     
-    public func lookup<PluginInterface>(_ pluginInterface: PluginInterface.Type) throws -> DefaultPluginHandle<PluginInterface> {
+    public func lookup<PluginInterface>(_ pluginInterface: PluginInterface.Type) throws -> PluginHandle<PluginInterface> {
         let identifier = String(describing: pluginInterface)
+        print("PluginRegistry: looking up handle for \(identifier)")
         if let handle = handles[identifier] {
-            return handle as! DefaultPluginHandle<PluginInterface>
+            return handle as! PluginHandle<PluginInterface>
         }
         guard let factory = factories[identifier] else {
             throw PluginError.notRegistered
@@ -28,7 +30,7 @@ public final class PluginRegistry {
         guard let pluginObjectLifecycle = pluginObject as? PluginLifecycle else {
             throw PluginError.pluginObjectDoesNotImplementPluginLifecycle
         }
-        let handle = DefaultPluginHandle(pluginObject: pluginObjectLifecycle, pluginInterfaceType: PluginInterface.self)
+        let handle = PluginHandle(pluginObject: pluginObjectLifecycle, pluginInterfaceType: PluginInterface.self)
         handles[identifier] = handle
         return handle
     }
