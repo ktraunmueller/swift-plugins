@@ -4,14 +4,22 @@ import UIKit
 
 protocol GraphingCalculatorPluginInterface: AnyObject {
     
-    var mainViewController: UIViewController { get }
+    var mainViewController: UIViewController? { get }
 }
 
 final class GraphingCalculatorPlugin: GraphingCalculatorPluginInterface, PluginLifecycle {
     
+    init() {
+        print("+++ GraphingCalculatorPlugin +++")
+    }
+    
+    deinit {
+        print("--- GraphingCalculatorPlugin ---")
+    }
+    
     // MARK: - GraphingCalculatorPluginInterface
         
-    private(set) lazy var mainViewController: UIViewController = GraphingCalculatorViewController(nibName: nil, bundle: nil)
+    private(set) var mainViewController: UIViewController?
     
     // MARK: - PluginLifecycle
     
@@ -22,6 +30,9 @@ final class GraphingCalculatorPlugin: GraphingCalculatorPluginInterface, PluginL
     }
     
     func start() async throws {
+        mainViewController = await MainActor.run {
+            GraphingCalculatorViewController(nibName: nil, bundle: nil)
+        }
         state = .started
     }
     
@@ -30,6 +41,7 @@ final class GraphingCalculatorPlugin: GraphingCalculatorPluginInterface, PluginL
     }
     
     func stop() async throws {
+        mainViewController = nil
         state = .stopped
     }
 }

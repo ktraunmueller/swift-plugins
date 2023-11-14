@@ -17,6 +17,7 @@
 		8EC9EB822B038CDB0087A565 /* GraphingCalculatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB812B038CDB0087A565 /* GraphingCalculatorViewController.swift */; };
 		8EC9EB842B038F590087A565 /* GraphingCalculatorPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB832B038F590087A565 /* GraphingCalculatorPlugin.swift */; };
 		8EC9EB892B0395120087A565 /* GlobalScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB882B0395120087A565 /* GlobalScope.swift */; };
+		8EC9EB8B2B039AAA0087A565 /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB8A2B039AAA0087A565 /* UI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,7 @@
 		8EC9EB812B038CDB0087A565 /* GraphingCalculatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphingCalculatorViewController.swift; sourceTree = "<group>"; };
 		8EC9EB832B038F590087A565 /* GraphingCalculatorPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphingCalculatorPlugin.swift; sourceTree = "<group>"; };
 		8EC9EB882B0395120087A565 /* GlobalScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalScope.swift; sourceTree = "<group>"; };
+		8EC9EB8A2B039AAA0087A565 /* UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			children = (
 				8EC9EB882B0395120087A565 /* GlobalScope.swift */,
 				8EC9EB6C2B037F2D0087A565 /* AppDelegate.swift */,
+				8EC9EB8A2B039AAA0087A565 /* UI.swift */,
 				8EC9EB6B2B037F2D0087A565 /* ViewController1.swift */,
 				8EC9EB7D2B0384EC0087A565 /* Plugins */,
 			);
@@ -247,6 +250,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EC9EB8B2B039AAA0087A565 /* UI.swift in Sources */,
 				8EC9EB732B037F2D0087A565 /* AppDelegate.swift in Sources */,
 				8EC9EB842B038F590087A565 /* GraphingCalculatorPlugin.swift in Sources */,
 				8EC9EB822B038CDB0087A565 /* GraphingCalculatorViewController.swift in Sources */,

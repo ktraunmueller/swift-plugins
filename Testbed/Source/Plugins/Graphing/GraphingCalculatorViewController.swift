@@ -1,10 +1,10 @@
 import UIKit
 
 @MainActor
-final class ViewController1: UIViewController {
+final class GraphingCalculatorViewController: UIViewController {
 
     deinit {
-        print("--- ViewController1 ---")
+        print("--- GraphingCalculatorViewController ---")
     }
     
     // MARK: - UIViewController
@@ -12,7 +12,7 @@ final class ViewController1: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
-        print("+++ ViewController1 +++")
+        print("+++ GraphingCalculatorViewController +++")
     }
     
     required init?(coder: NSCoder) {
@@ -22,9 +22,8 @@ final class ViewController1: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("ViewController1: viewDidLoad")
+        print("GraphingCalculatorViewController: viewDidLoad")
         
-        view.backgroundColor = .magenta.withAlphaComponent(0.2)
+        view.backgroundColor = .cyan.withAlphaComponent(0.2)
     }
 }
-
