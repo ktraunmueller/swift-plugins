@@ -26,7 +26,7 @@ final class PluginsTests: XCTestCase {
         
         do {
             let pluginHandle = try registry.lookup(AdderInterface.self)
-            let pluginInterface = try await pluginHandle.acquire()
+            let _ = try await pluginHandle.acquire()
             XCTAssertEqual(pluginHandle.usageCount, 1)
             try await pluginHandle.release()
             XCTAssertEqual(pluginHandle.usageCount, 0)

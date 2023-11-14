@@ -4,6 +4,9 @@ public final class PluginRegistry {
     private var factories: [String: () -> Any] = [:]
     private var handles: [String: AnyObject] = [:]
     
+    public init() {
+    }
+    
     /// Register a plugin.
     ///
     /// - Parameters:
