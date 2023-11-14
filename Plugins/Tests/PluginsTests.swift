@@ -5,9 +5,10 @@ final class PluginsTests: XCTestCase {
     
     func testRegistrationAndLookup() async throws {
         let registry = PluginRegistry()
-        try registry.register(factory: {
+        try registry.register(AdderInterface.self) {
             return AdderObject()
-        }, for: AdderInterface.self)
+        }
+        
         do {
             let pluginHandle = try registry.lookup(AdderInterface.self)
             let pluginInterface = try await pluginHandle.acquire()
@@ -17,17 +18,18 @@ final class PluginsTests: XCTestCase {
         }
     }
     
-    func testShutdown() async throws {
+    func testShutdownWhenUsageCountReachesZero() async throws {
         let registry = PluginRegistry()
-        try registry.register(factory: {
+        try registry.register(AdderInterface.self) {
             return AdderObject()
-        }, for: AdderInterface.self)
+        }
+        
         do {
             let pluginHandle = try registry.lookup(AdderInterface.self)
             let pluginInterface = try await pluginHandle.acquire()
             XCTAssertEqual(pluginHandle.usageCount, 1)
             try await pluginHandle.release()
-            XCTAssertFalse(registry.hasHandle(for: AdderInterface.self))
+            XCTAssertEqual(pluginHandle.usageCount, 0)
         } catch let error {
             print(error)
         }

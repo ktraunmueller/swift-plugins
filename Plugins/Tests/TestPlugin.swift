@@ -25,13 +25,19 @@ final class AdderObject: AdderInterface, PluginLifecycle {
 
     private(set) var state: PluginState = .stopped
     
-    func start() async throws {
+    func markAsStarting() {
         state = .starting
+    }
+    
+    func start() async throws {
         state = .started
     }
 
-    func stop() async throws {
+    func markAsStopping() {
         state = .stopping
+    }
+    
+    func stop() async throws {
         state = .stopped
     }
     

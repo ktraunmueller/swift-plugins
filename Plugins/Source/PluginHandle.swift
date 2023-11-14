@@ -6,7 +6,7 @@ public final class PluginHandle<PluginInterface> {
     
     private let pluginObject: PluginLifecycle
     private weak var registry: PluginRegistry?
-    private(set) var isValid = true
+    private(set) var usageCount = 0 // accessible only for testing
     
     init(pluginObject: PluginLifecycle, pluginInterfaceType: PluginInterface.Type, registry: PluginRegistry) {
         self.pluginObject = pluginObject
@@ -17,14 +17,12 @@ public final class PluginHandle<PluginInterface> {
     ///
     /// This will start the plugin if it is currently stopped.
     public func acquire() async throws -> PluginInterface {
-        guard isValid else {
-            throw PluginError.invalidHandle
-        }
         if pluginObject.state == .stopped {
             do {
+                pluginObject.markAsStarting()
                 try await pluginObject.start()
                 assert(pluginObject.state == .started)
-                pluginObject.incrementUsageCount()
+                usageCount += 1
             }
             catch let error {
                 throw error
@@ -36,31 +34,20 @@ public final class PluginHandle<PluginInterface> {
     /// Releases a reference to the plugin interface.
     ///
     /// If this brings the plugin's usage count to zero, the plugin
-    /// will be stopped (and the plugin object deallocated), and the plugin registry will discard this
-    /// plugin handle (which renders it invalid).
+    /// will be stopped.
     public func release() async throws {
-        guard isValid else {
-            throw PluginError.invalidHandle
-        }
         if pluginObject.state == .started {
-            pluginObject.decrementUsageCount()
-            if pluginObject.usageCount == 0 {
+            usageCount -= 1
+            if usageCount == 0 {
                 do {
+                    pluginObject.markAsStopping()
                     try await pluginObject.stop()
                     assert(pluginObject.state == .stopped)
-                    registry?.discard(self)
-                    isValid = false
                 }
                 catch let error {
                     throw error
                 }
             }
         }
-    }
-    
-    // MARK: Test Support
-        
-    var usageCount: Int {
-        return pluginObject.usageCount
     }
 }

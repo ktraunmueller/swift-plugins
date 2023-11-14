@@ -211,9 +211,9 @@
 			files = (
 				8E6779B62AFD02470089DEE5 /* PluginRegistry.swift in Sources */,
 				8E6779B72AFD02470089DEE5 /* PluginHandle.swift in Sources */,
-				8E67799C2AFD01F10089DEE5 /* Plugins.docc in Sources */,
 				8EC9EB0B2B02545D0087A565 /* PluginLifecycle.swift in Sources */,
 				8EC9EB0D2B0254810087A565 /* PluginError.swift in Sources */,
+				8E67799C2AFD01F10089DEE5 /* Plugins.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

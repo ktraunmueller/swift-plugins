@@ -9,8 +9,8 @@ public final class PluginRegistry {
     /// - Parameters:
     ///   - factory: The plugin object factory.
     ///   - pluginInterfaceType: The plugin interface type.
-    public func register<PluginObject, PluginInterface>(factory: @escaping () -> PluginObject,
-                                                        for pluginInterfaceType: PluginInterface.Type) throws
+    public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
+                                                        factory: @escaping () -> PluginObject) throws
     where PluginObject: PluginLifecycle {
         let identifier = String(describing: pluginInterfaceType)
         guard factories[identifier] == nil else {
@@ -45,22 +45,5 @@ public final class PluginRegistry {
                                   registry: self)
         handles[identifier] = handle
         return handle
-    }
-    
-    func discard<PluginInterface>(_ finishedHandle: PluginHandle<PluginInterface>) {
-        for (identifier, handle) in handles {
-            if handle === finishedHandle {
-                print("PluginRegistry: discarding handle for \(identifier)")
-                handles.removeValue(forKey: identifier)
-                break
-            }
-        }
-    }
-    
-    // MARK: Test Support
-    
-    func hasHandle<PluginInterface>(for pluginInterface: PluginInterface.Type) -> Bool {
-        let identifier = String(describing: pluginInterface)
-        return handles[identifier] != nil
     }
 }

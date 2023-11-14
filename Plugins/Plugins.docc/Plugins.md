@@ -4,12 +4,15 @@ A framework for managing units of functionality.
 
 ## Overview
 
-This framework provides facilities for registering and consuming functionality provided
-by so-called _plugins_.
+This framework provides mechanisms for contributing and consuming functionality in
+the form of _plugins_. The core idea is to facilitate loosely coupled software 
+systems with good separation of concerns. 
+
+> Note: This framework is loosely inspired by the plugin architecture of the Eclipse Rich Client Platform.
 
 ### Plugins
 
-Plugins are the basic units of functionality (think: "separation of concerns").
+Plugins are the basic units of functionality.
 
 The functionality provided by a plugin is formalized trough its
 _plugin interface_. Here's a simple example of a plugin interface:
@@ -41,7 +44,7 @@ final class AdderObject: AdderInterface, PluginLifecycle {
 
 ### The Plugin Lifecycle
 
-Plugins are instantiated and prepared for use only when needed. So, regardless of the number of 
+Plugins are instantiated and prepared for use only when needed. Regardless of the number of 
 plugins registered in a system, initially there will be zero plugin objects in memory. 
 In addition to being lazy-instantiated, plugins which are no longer needed are shut down, 
 and their plugin objects deallocated.
@@ -51,14 +54,24 @@ This forms a simple _plugin lifecycle_:
 <!--<img src="Resources/plugin-lifecycle.png" width="200"/>-->
 ![plugin lifecyle](plugin-lifecycle)
 
-Plugin objects are required to conform to the ``PluginLifecycle`` protocol:
+The plugin lifecycle is formalized by the ``PluginLifecycle`` protocol, which
+plugin objects are required to adopt:
+
 ```swift
+public enum PluginState {
+    case stopped
+    case starting
+    case started
+    case stopping
+}
+
 public protocol PluginLifecycle {
-    
     var state: PluginState { get }
-    
-    func start() /*async throws
-    func stop() /*async*/ throws
+
+    func markAsStarting()
+    func start() async throws
+    func markAsStopping()
+    func stop() async throws 
 }
 ```
 
@@ -68,24 +81,25 @@ plugin handles, let's have a look at the _plugin registry_.
 ### The Plugin Registry
 
 The plugin registry is the central registration and lookup point for plugins. Plugins must 
-be registered with the plugin registry before client code can use them.
+be registered with the plugin registry before clients can use them, and handles to plugins 
+can only be obtained from the plugin registry.
 
-Plugins are registered by calling ``PluginRegistry/register(factory:for:)``, which takes
-a factory closure that (lazily) creates the plugin object when needed, and the plugin 
-interface type, which is used to identify plugins:
+Plugins are registered by calling ``PluginRegistry/register(_:factory:)``, which takes
+the plugin interface type (used throughout to identify plugins) and a factory 
+closure that (lazily) creates the plugin object:
 ```swift
 let registry = PluginRegistry()
 ...
-try registry.register(factory: {
+try registry.register(AdderInterface.self) {
     return AdderObject()
-}, for: AdderInterface.self)
+}
 ```
 
 The factory closure will be invoked whenever a new instance of the plugin object is needed. 
-This will be handled transparently (i.e., not visible to clients).
+This will be handled transparently, i.e. hidden from clients.
 
-In order to consume the functionality provided by a certain plugin, clients need to look
-up the plugin (again identified by the plugin interface type) in the registry:
+In order to consume functionality, clients need to look up a plugin (which is again 
+identified by the plugin interface type) in the registry:
 ```swift
 do {
     let pluginHandle = try registry.lookup(AdderInterface.self)
@@ -99,9 +113,37 @@ If successful, the call to ``PluginRegistry/lookup(_:)`` returns a _plugin handl
 Plugin handles serve two purposes:
 
 - They hide the concrete plugin object type from clients - clients only ever 
-  interact with a plugin through the _plugin interface_.
-- They handle the plugin lifecycle. If a client wants to interact
-  with a plugin, and the plugin is not yet in the started state, it will be
-  transparently started by the plugin handle before it can be used by a client.
+  interact with a plugin through its _plugin interface_.
+- They transparently manage the plugin lifecycle. If a client wants to interact
+  with a plugin, and the plugin has not yet been started, it will be
+  started by the plugin handle before a client can use it.
+
+> Note: 
+There's a one-to-one relation between plugins and plugin handles, meaning that 
+there exists at most one plugin handle per plugin. Multiple clients looking up 
+the same plugin will receive a reference to the same plugin handle instance.
+
+Looking up a plugin handle is a lightweight operation, i.e., this will not have 
+any side effects on the plugin lifecycle. To actually trigger plugin
+startup, clients need to ``PluginHandle/acquire()`` a reference to the plugin
+interface. Only at this point will the plugin be started if it's in the 
+stopped state. 
+
+> Note: This is also the reason why ``PluginHandle/acquire()`` is an
+asynchronous function.
+
+If plugin startup has been successful, clients can then consume the services
+provided by the plugin through the plugin interface.
+
+Similar to lazy plugin startup, plugins that are no longer in use (i.e., no longer 
+referenced by any clients) will be shut down automatically to conserve resources. 
+When a client is done using a plugin, it is expected to call ``PluginHandle/release()``
+to relinquish the plugin interface. ``PluginHandle/acquire()`` and ``PluginHandle/release()``
+will increment and decrement, respectively, an internal usage count.
+When this usage count reaches zero, the plugin will be stopped, and any associated
+resources will be released. The plugin handle will stay valid, though. On the
+next call to ``PluginHandle/acquire()``, the plugin will be started again.
 
 ## Topics
+
+TODO threading?

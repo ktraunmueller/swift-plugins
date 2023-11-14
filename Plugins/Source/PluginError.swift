@@ -8,5 +8,4 @@ public enum PluginError: Error {
     case pluginNotRegistered
     case pluginAlreadyRegistered
 //    case pluginCouldNotBeStarted
-    case invalidHandle
 }
