@@ -17,15 +17,18 @@ public final class PluginHandle<PluginInterface> {
     ///
     /// This will start the plugin if it is currently stopped.
     public func acquire() async throws -> PluginInterface {
+        print("PluginHandle: acquiring \(String(describing: PluginInterface.self))...")
         if pluginObject.state == .stopped {
             do {
                 if let registry = registry {
                     try await pluginObject.acquireDependencies(from: registry)
                 }
+                print("PluginHandle: starting \(String(describing: pluginObject))...")
                 pluginObject.markAsStarting()
                 try await pluginObject.start()
                 assert(pluginObject.state == .started)
                 usageCount += 1
+                print("PluginHandle: ...\(String(describing: pluginObject)) started, usage count now \(usageCount)")
             }
             catch let error {
                 throw error // simply rethrow for now
@@ -39,12 +42,16 @@ public final class PluginHandle<PluginInterface> {
     /// If this brings the plugin's usage count to zero, the plugin
     /// will be stopped.
     public func release() async throws {
+        print("PluginHandle: releasing \(String(describing: PluginInterface.self))...")
         if pluginObject.state == .started {
             usageCount -= 1
+            print("PluginHandle: \(String(describing: pluginObject)) usage count now \(usageCount)")
             if usageCount == 0 {
                 do {
+                    print("PluginHandle: stopping \(String(describing: pluginObject))...")
                     pluginObject.markAsStopping()
                     try await pluginObject.stop()
+                    print("PluginHandle: ...\(String(describing: pluginObject)) stopped")
                     assert(pluginObject.state == .stopped)
                 }
                 catch let error {

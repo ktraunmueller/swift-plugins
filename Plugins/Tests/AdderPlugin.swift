@@ -7,11 +7,11 @@ protocol AdderPluginInterface: AnyObject {
 final class AdderPluginObject: AdderPluginInterface, PluginLifecycle {
     
     init() {
-        print("+++ AdderPluginObject +++")
+        print("+++ AdderPluginObject created +++")
     }
     
     deinit {
-        print("--- AdderPluginObject ---")
+        print("--- AdderPluginObject destroyed ---")
     }
 
     // MARK: AdderPluginInterface

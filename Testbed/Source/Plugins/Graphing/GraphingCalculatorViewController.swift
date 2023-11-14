@@ -4,7 +4,20 @@ import UIKit
 final class GraphingCalculatorViewController: UIViewController {
 
     deinit {
-        print("--- GraphingCalculatorViewController ---")
+        print("--- GraphingCalculatorViewController destroyed ---")
+    }
+    
+    @objc
+    private func shutdownGeometryPlugin() {
+        print("GraphingCalculatorViewController: shutdownGeometryPlugin")
+        Task {
+            do {
+                let geometryPluginHandle = try GlobalScope.pluginRegistry.lookup(GeometryPluginInterface.self)
+                try await geometryPluginHandle.release()
+            } catch let error {
+                print(error)
+            }
+        }
     }
     
     // MARK: - UIViewController
@@ -12,7 +25,7 @@ final class GraphingCalculatorViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
-        print("+++ GraphingCalculatorViewController +++")
+        print("+++ GraphingCalculatorViewController created +++")
     }
     
     required init?(coder: NSCoder) {
@@ -25,5 +38,11 @@ final class GraphingCalculatorViewController: UIViewController {
         print("GraphingCalculatorViewController: viewDidLoad")
         
         view.backgroundColor = .cyan.withAlphaComponent(0.2)
+        title = "Graphing"
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "stop.circle"),
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(shutdownGeometryPlugin))
     }
 }

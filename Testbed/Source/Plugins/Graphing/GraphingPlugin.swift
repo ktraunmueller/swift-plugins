@@ -13,11 +13,11 @@ protocol GraphingPluginInterface: AnyObject {
 final class GraphingPlugin: GraphingPluginInterface, PluginLifecycle {
     
     init() {
-        print("+++ GraphingPlugin +++")
+        print("+++ GraphingPlugin created +++")
     }
     
     deinit {
-        print("--- GraphingPlugin ---")
+        print("--- GraphingPlugin destroyed ---")
     }
     
     // MARK: - GraphingPluginInterface

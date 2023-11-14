@@ -19,6 +19,7 @@
 		8EC9EB892B0395120087A565 /* GlobalScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB882B0395120087A565 /* GlobalScope.swift */; };
 		8EC9EB8B2B039AAA0087A565 /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB8A2B039AAA0087A565 /* UI.swift */; };
 		8ED706282B03A0CE0058BF87 /* GeometryPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED706272B03A0CE0058BF87 /* GeometryPlugin.swift */; };
+		8ED7062D2B03B5500058BF87 /* GeometryCalculatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED7062C2B03B5500058BF87 /* GeometryCalculatorViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		8EC9EB882B0395120087A565 /* GlobalScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalScope.swift; sourceTree = "<group>"; };
 		8EC9EB8A2B039AAA0087A565 /* UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
 		8ED706272B03A0CE0058BF87 /* GeometryPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryPlugin.swift; sourceTree = "<group>"; };
+		8ED7062C2B03B5500058BF87 /* GeometryCalculatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryCalculatorViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,7 +139,7 @@
 		8EC9EB7D2B0384EC0087A565 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
-				8EC9EB7E2B0385060087A565 /* UIPlugin.swift */,
+				8ED7062B2B03B35D0058BF87 /* UI */,
 				8ED706262B03A0A00058BF87 /* Geometry */,
 				8EC9EB852B03916E0087A565 /* Graphing */,
 			);
@@ -157,8 +159,17 @@
 			isa = PBXGroup;
 			children = (
 				8ED706272B03A0CE0058BF87 /* GeometryPlugin.swift */,
+				8ED7062C2B03B5500058BF87 /* GeometryCalculatorViewController.swift */,
 			);
 			path = Geometry;
+			sourceTree = "<group>";
+		};
+		8ED7062B2B03B35D0058BF87 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				8EC9EB7E2B0385060087A565 /* UIPlugin.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -266,6 +277,7 @@
 				8ED706282B03A0CE0058BF87 /* GeometryPlugin.swift in Sources */,
 				8EC9EB842B038F590087A565 /* GraphingPlugin.swift in Sources */,
 				8EC9EB822B038CDB0087A565 /* GraphingCalculatorViewController.swift in Sources */,
+				8ED7062D2B03B5500058BF87 /* GeometryCalculatorViewController.swift in Sources */,
 				8EC9EB722B037F2D0087A565 /* ViewController1.swift in Sources */,
 				8EC9EB802B03862B0087A565 /* UIPlugin.swift in Sources */,
 				8EC9EB892B0395120087A565 /* GlobalScope.swift in Sources */,

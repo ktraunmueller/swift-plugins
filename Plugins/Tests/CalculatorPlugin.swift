@@ -11,11 +11,11 @@ protocol CalculatorPluginInterface: AnyObject {
 final class CalculatorPluginObject: CalculatorPluginInterface, PluginLifecycle {
     
     init() {
-        print("+++ CalculatorPluginObject +++")
+        print("+++ CalculatorPluginObject created +++")
     }
     
     deinit {
-        print("--- CalculatorPluginObject ---")
+        print("--- CalculatorPluginObject destroyed ---")
     }
 
     // MARK: CalculatorPluginInterface

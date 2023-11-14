@@ -9,6 +9,14 @@ protocol UIPluginInterface: AnyObject {
 
 final class UIPlugin: UIPluginInterface, PluginLifecycle {
     
+    init() {
+        print("+++ UIPlugin created +++")
+    }
+    
+    deinit {
+        print("--- UIPlugin destroyed ---")
+    }
+    
     // MARK: - UIPluginInterface
         
     // MARK: - PluginLifecycle

@@ -13,11 +13,11 @@ protocol GeometryPluginInterface: AnyObject {
 final class GeometryPlugin: GeometryPluginInterface, PluginLifecycle {
 
     init() {
-        print("+++ GeometryPlugin +++")
+        print("+++ GeometryPlugin created +++")
     }
     
     deinit {
-        print("--- GeometryPlugin ---")
+        print("--- GeometryPlugin destroyed ---")
     }
     
     // MARK: - GeometryPluginInterface
@@ -47,7 +47,7 @@ final class GeometryPlugin: GeometryPluginInterface, PluginLifecycle {
     
     func start() async throws {
         mainViewController = await MainActor.run {
-            UIViewController(nibName: nil, bundle: nil)
+            GeometryCalculatorViewController(nibName: nil, bundle: nil)
         }
         state = .started
     }

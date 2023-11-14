@@ -4,7 +4,7 @@ import UIKit
 final class ViewController1: UIViewController {
 
     deinit {
-        print("--- ViewController1 ---")
+        print("--- ViewController1 destroyed ---")
     }
     
     // MARK: - UIViewController
@@ -12,7 +12,7 @@ final class ViewController1: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
-        print("+++ ViewController1 +++")
+        print("+++ ViewController1 created +++")
     }
     
     required init?(coder: NSCoder) {
