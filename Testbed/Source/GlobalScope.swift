@@ -7,15 +7,13 @@ enum GlobalScope {
     // move elsewhere?
     static func registerPlugins() {
         do {
-            try GlobalScope.pluginRegistry.register(UIPluginInterface.self) {
+            try pluginRegistry.register(UIPluginInterface.self) {
                 return UIPlugin()
             }
-            try GlobalScope.pluginRegistry.register(GraphingPluginInterface.self,
-                                                    dependencies: [UIPluginInterface.self]) {
+            try pluginRegistry.register(GraphingPluginInterface.self) {
                 return GraphingPlugin()
             }
-            try GlobalScope.pluginRegistry.register(GeometryPluginInterface.self,
-                                                    dependencies: [UIPluginInterface.self]) {
+            try pluginRegistry.register(GeometryPluginInterface.self) {
                 return GeometryPlugin()
             }
         } catch let error {

@@ -3,7 +3,6 @@ public final class PluginRegistry {
     
     private var factories: [String: () -> Any] = [:]
     private var handles: [String: AnyObject] = [:]
-    private var dependencies: [String: Set<String>] = [:]
     
     public init() {
     }
@@ -14,20 +13,14 @@ public final class PluginRegistry {
     ///   - factory: The plugin object factory.
     ///   - pluginInterfaceType: The plugin interface type.
     public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
-                                                        dependencies pluginDependencies: [Any.Type] = [],
                                                         factory: @escaping () -> PluginObject) throws
     where PluginObject: PluginLifecycle {
         let identifier = String(describing: pluginInterfaceType)
         guard factories[identifier] == nil else {
             throw PluginError.pluginAlreadyRegistered
         }
-        print("PluginRegistry: registering factory for \(identifier)")
+        print("PluginRegistry: registering \(identifier)")
         factories[identifier] = factory
-        
-        dependencies[identifier] = Set(pluginDependencies.map { String(describing: $0) })
-        if let registeredDependencies = dependencies[identifier], !registeredDependencies.isEmpty {
-            print("PluginRegistry: dependencies for \(identifier): \(String(describing: registeredDependencies))")
-        }
     }
     
     /// Look up a plugin.
@@ -37,7 +30,7 @@ public final class PluginRegistry {
     /// - Throws: PluginError.notRegistered if the given plugin interface type has not been registered.
     public func lookup<PluginInterface>(_ pluginInterface: PluginInterface.Type) throws -> PluginHandle<PluginInterface> {
         let identifier = String(describing: pluginInterface)
-        print("PluginRegistry: looking up handle for \(identifier)")
+        print("PluginRegistry: looking up \(identifier)")
         if let handle = handles[identifier] {
             return handle as! PluginHandle<PluginInterface>
         }

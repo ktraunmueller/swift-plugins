@@ -15,6 +15,12 @@ final class UIPlugin: UIPluginInterface, PluginLifecycle {
     
     private(set) var state: Plugins.PluginState = .stopped
     
+    func acquireDependencies(from: PluginRegistry) async throws {
+    }
+    
+    func releaseDependencies(in: PluginRegistry) async throws {
+    }
+    
     func markAsStarting() {
         state = .starting
     }

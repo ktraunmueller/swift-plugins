@@ -19,13 +19,16 @@ public final class PluginHandle<PluginInterface> {
     public func acquire() async throws -> PluginInterface {
         if pluginObject.state == .stopped {
             do {
+                if let registry = registry {
+                    try await pluginObject.acquireDependencies(from: registry)
+                }
                 pluginObject.markAsStarting()
                 try await pluginObject.start()
                 assert(pluginObject.state == .started)
                 usageCount += 1
             }
             catch let error {
-                throw error
+                throw error // simply rethrow for now
             }
         }
         return pluginObject as! PluginInterface

@@ -17,6 +17,11 @@ public protocol PluginLifecycle {
     
     var state: PluginState { get }
 
+    /// Acquire all depdendencies.
+    func acquireDependencies(from: PluginRegistry) async throws
+    /// Release all dependencies.
+    func releaseDependencies(in: PluginRegistry) async throws
+    
     /// Sets state to `.starting`.
     func markAsStarting()
     /// Tries to start the plugin. Sets the state to `.started` if successful, throws otherwise.

@@ -1,29 +1,35 @@
 import Plugins
 
-protocol AdderInterface: AnyObject {
+protocol AdderPluginInterface: AnyObject {
     func add(lhs: Int, rhs: Int) -> Int
 }
 
-final class AdderObject: AdderInterface, PluginLifecycle {
+final class AdderPluginObject: AdderPluginInterface, PluginLifecycle {
     
     init() {
-        print("+++ TestPluginObject +++")
+        print("+++ AdderPluginObject +++")
     }
     
     deinit {
-        print("--- TestPluginObject ---")
+        print("--- AdderPluginObject ---")
     }
 
-    // MARK: AdderInterface
+    // MARK: AdderPluginInterface
 
     func add(lhs: Int, rhs: Int) -> Int {
-        print("*** TestPluginObject.add(\(lhs), \(rhs))")
+        print("AdderPluginObject: add(\(lhs), \(rhs))")
         return lhs + rhs
     }
 
     // MARK: PluginLifecycle
 
     private(set) var state: PluginState = .stopped
+    
+    func acquireDependencies(from: PluginRegistry) async throws {
+    }
+    
+    func releaseDependencies(in: PluginRegistry) async throws {
+    }
     
     func markAsStarting() {
         state = .starting
