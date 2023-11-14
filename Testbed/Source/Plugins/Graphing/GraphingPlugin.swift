@@ -2,22 +2,22 @@ import Plugins
 
 import UIKit
 
-protocol GraphingCalculatorPluginInterface: AnyObject {
+protocol GraphingPluginInterface: AnyObject {
     
     var mainViewController: UIViewController? { get }
 }
 
-final class GraphingCalculatorPlugin: GraphingCalculatorPluginInterface, PluginLifecycle {
+final class GraphingPlugin: GraphingPluginInterface, PluginLifecycle {
     
     init() {
-        print("+++ GraphingCalculatorPlugin +++")
+        print("+++ GraphingPlugin +++")
     }
     
     deinit {
-        print("--- GraphingCalculatorPlugin ---")
+        print("--- GraphingPlugin ---")
     }
     
-    // MARK: - GraphingCalculatorPluginInterface
+    // MARK: - GraphingPluginInterface
         
     private(set) var mainViewController: UIViewController?
     

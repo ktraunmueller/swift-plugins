@@ -10,8 +10,13 @@ enum GlobalScope {
             try GlobalScope.pluginRegistry.register(UIPluginInterface.self) {
                 return UIPlugin()
             }
-            try GlobalScope.pluginRegistry.register(GraphingCalculatorPluginInterface.self) {
-                return GraphingCalculatorPlugin()
+            try GlobalScope.pluginRegistry.register(GraphingPluginInterface.self,
+                                                    dependencies: [UIPluginInterface.self]) {
+                return GraphingPlugin()
+            }
+            try GlobalScope.pluginRegistry.register(GeometryPluginInterface.self,
+                                                    dependencies: [UIPluginInterface.self]) {
+                return GeometryPlugin()
             }
         } catch let error {
             print(error)

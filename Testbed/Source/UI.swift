@@ -6,9 +6,9 @@ enum UI {
     static func makeTabBarController() async -> UITabBarController {
         var viewControllers: [UIViewController] = []
         do {
-            let graphingCalculatorPluginHandle = try GlobalScope.pluginRegistry.lookup(GraphingCalculatorPluginInterface.self)
-            let graphingCalculatorPlugin = try await graphingCalculatorPluginHandle.acquire()
-            if let graphingCalculatorViewController = graphingCalculatorPlugin.mainViewController {
+            let graphingPluginHandle = try GlobalScope.pluginRegistry.lookup(GraphingPluginInterface.self)
+            let graphingPlugin = try await graphingPluginHandle.acquire()
+            if let graphingCalculatorViewController = graphingPlugin.mainViewController {
                 graphingCalculatorViewController.tabBarItem = UITabBarItem(title: "Graphing",
                                                                            image: UIImage(systemName: "pencil.tip"),
                                                                            tag: 0)

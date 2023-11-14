@@ -3,6 +3,7 @@ public final class PluginRegistry {
     
     private var factories: [String: () -> Any] = [:]
     private var handles: [String: AnyObject] = [:]
+    private var dependencies: [String: Set<String>] = [:]
     
     public init() {
     }
@@ -13,6 +14,7 @@ public final class PluginRegistry {
     ///   - factory: The plugin object factory.
     ///   - pluginInterfaceType: The plugin interface type.
     public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
+                                                        dependencies pluginDependencies: [Any.Type] = [],
                                                         factory: @escaping () -> PluginObject) throws
     where PluginObject: PluginLifecycle {
         let identifier = String(describing: pluginInterfaceType)
@@ -21,6 +23,11 @@ public final class PluginRegistry {
         }
         print("PluginRegistry: registering factory for \(identifier)")
         factories[identifier] = factory
+        
+        dependencies[identifier] = Set(pluginDependencies.map { String(describing: $0) })
+        if let registeredDependencies = dependencies[identifier], !registeredDependencies.isEmpty {
+            print("PluginRegistry: dependencies for \(identifier): \(String(describing: registeredDependencies))")
+        }
     }
     
     /// Look up a plugin.
