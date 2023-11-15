@@ -21,6 +21,8 @@
 		8EFA43032B04A4E000B9CD74 /* TabUIPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFA43022B04A4E000B9CD74 /* TabUIPlugin.swift */; };
 		8EFA43042B04A60B00B9CD74 /* Plugins.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC9EB7A2B037F830087A565 /* Plugins.framework */; };
 		8EFA43052B04A60B00B9CD74 /* Plugins.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC9EB7A2B037F830087A565 /* Plugins.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8EFA43092B04B3C400B9CD74 /* AppSwitcherPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFA43082B04B3C400B9CD74 /* AppSwitcherPlugin.swift */; };
+		8EFA430B2B04B60000B9CD74 /* AppSwitcherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFA430A2B04B60000B9CD74 /* AppSwitcherViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +66,8 @@
 		8ED706272B03A0CE0058BF87 /* GeometryPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryPlugin.swift; sourceTree = "<group>"; };
 		8ED7062C2B03B5500058BF87 /* GeometryCalculatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryCalculatorViewController.swift; sourceTree = "<group>"; };
 		8EFA43022B04A4E000B9CD74 /* TabUIPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabUIPlugin.swift; sourceTree = "<group>"; };
+		8EFA43082B04B3C400B9CD74 /* AppSwitcherPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSwitcherPlugin.swift; sourceTree = "<group>"; };
+		8EFA430A2B04B60000B9CD74 /* AppSwitcherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSwitcherViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				8ED7062B2B03B35D0058BF87 /* UI */,
+				8EFA43072B04B3A900B9CD74 /* AppSwitcher */,
 				8ED706262B03A0A00058BF87 /* Geometry */,
 				8EC9EB852B03916E0087A565 /* Graphing */,
 			);
@@ -185,6 +190,15 @@
 				8EFA43022B04A4E000B9CD74 /* TabUIPlugin.swift */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		8EFA43072B04B3A900B9CD74 /* AppSwitcher */ = {
+			isa = PBXGroup;
+			children = (
+				8EFA43082B04B3C400B9CD74 /* AppSwitcherPlugin.swift */,
+				8EFA430A2B04B60000B9CD74 /* AppSwitcherViewController.swift */,
+			);
+			path = AppSwitcher;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -294,7 +308,9 @@
 				8EC9EB842B038F590087A565 /* GraphingPlugin.swift in Sources */,
 				8EC9EB822B038CDB0087A565 /* GraphingCalculatorViewController.swift in Sources */,
 				8ED7062D2B03B5500058BF87 /* GeometryCalculatorViewController.swift in Sources */,
+				8EFA430B2B04B60000B9CD74 /* AppSwitcherViewController.swift in Sources */,
 				8EC9EB802B03862B0087A565 /* UIPlugin.swift in Sources */,
+				8EFA43092B04B3C400B9CD74 /* AppSwitcherPlugin.swift in Sources */,
 				8EFA43032B04A4E000B9CD74 /* TabUIPlugin.swift in Sources */,
 				8EC9EB892B0395120087A565 /* GlobalScope.swift in Sources */,
 			);

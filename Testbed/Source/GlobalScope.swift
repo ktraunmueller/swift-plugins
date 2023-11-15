@@ -10,6 +10,12 @@ enum GlobalScope {
             try pluginRegistry.register(UIPluginInterface.self) {
                 return UIPluginObject()
             }
+            try pluginRegistry.register(TabUIPluginInterface.self) {
+                return TabUIPluginObject()
+            }
+            try pluginRegistry.register(AppSwitcherPluginInterface.self) {
+                return AppSwitcherPluginObject()
+            }
             try pluginRegistry.register(GraphingPluginInterface.self) {
                 return GraphingPluginObject()
             }
