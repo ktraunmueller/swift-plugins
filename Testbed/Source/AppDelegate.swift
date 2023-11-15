@@ -14,7 +14,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         GlobalScope.registerPlugins(window: window)
         
         Task {
-            window?.rootViewController = await UI.makeAppSwitcherViewController()
+            window?.rootViewController = await UI.makeRootViewController()
             window?.makeKeyAndVisible()
         }
         
