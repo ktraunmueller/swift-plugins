@@ -12,7 +12,6 @@
 		8EC9EB722B037F2D0087A565 /* ViewController1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB6B2B037F2D0087A565 /* ViewController1.swift */; };
 		8EC9EB732B037F2D0087A565 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB6C2B037F2D0087A565 /* AppDelegate.swift */; };
 		8EC9EB782B037F3D0087A565 /* TestbedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB772B037F3D0087A565 /* TestbedTests.swift */; };
-		8EC9EB7B2B037F830087A565 /* Plugins.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC9EB7A2B037F830087A565 /* Plugins.framework */; };
 		8EC9EB802B03862B0087A565 /* UIPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB7E2B0385060087A565 /* UIPlugin.swift */; };
 		8EC9EB822B038CDB0087A565 /* GraphingCalculatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB812B038CDB0087A565 /* GraphingCalculatorViewController.swift */; };
 		8EC9EB842B038F590087A565 /* GraphingPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB832B038F590087A565 /* GraphingPlugin.swift */; };
@@ -20,6 +19,9 @@
 		8EC9EB8B2B039AAA0087A565 /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB8A2B039AAA0087A565 /* UI.swift */; };
 		8ED706282B03A0CE0058BF87 /* GeometryPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED706272B03A0CE0058BF87 /* GeometryPlugin.swift */; };
 		8ED7062D2B03B5500058BF87 /* GeometryCalculatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED7062C2B03B5500058BF87 /* GeometryCalculatorViewController.swift */; };
+		8EFA43032B04A4E000B9CD74 /* TabUIPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFA43022B04A4E000B9CD74 /* TabUIPlugin.swift */; };
+		8EFA43042B04A60B00B9CD74 /* Plugins.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC9EB7A2B037F830087A565 /* Plugins.framework */; };
+		8EFA43052B04A60B00B9CD74 /* Plugins.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC9EB7A2B037F830087A565 /* Plugins.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +33,20 @@
 			remoteInfo = Testbed;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8EFA43062B04A60B00B9CD74 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8EFA43052B04A60B00B9CD74 /* Plugins.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		8EC9EB172B037E7C0087A565 /* Testbed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Testbed.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -49,6 +65,7 @@
 		8EC9EB8A2B039AAA0087A565 /* UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
 		8ED706272B03A0CE0058BF87 /* GeometryPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryPlugin.swift; sourceTree = "<group>"; };
 		8ED7062C2B03B5500058BF87 /* GeometryCalculatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryCalculatorViewController.swift; sourceTree = "<group>"; };
+		8EFA43022B04A4E000B9CD74 /* TabUIPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabUIPlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8EC9EB7B2B037F830087A565 /* Plugins.framework in Frameworks */,
+				8EFA43042B04A60B00B9CD74 /* Plugins.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				8EC9EB7E2B0385060087A565 /* UIPlugin.swift */,
+				8EFA43022B04A4E000B9CD74 /* TabUIPlugin.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -182,6 +200,7 @@
 				8EC9EB132B037E7C0087A565 /* Sources */,
 				8EC9EB142B037E7C0087A565 /* Frameworks */,
 				8EC9EB152B037E7C0087A565 /* Resources */,
+				8EFA43062B04A60B00B9CD74 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -280,6 +299,7 @@
 				8ED7062D2B03B5500058BF87 /* GeometryCalculatorViewController.swift in Sources */,
 				8EC9EB722B037F2D0087A565 /* ViewController1.swift in Sources */,
 				8EC9EB802B03862B0087A565 /* UIPlugin.swift in Sources */,
+				8EFA43032B04A4E000B9CD74 /* TabUIPlugin.swift in Sources */,
 				8EC9EB892B0395120087A565 /* GlobalScope.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
