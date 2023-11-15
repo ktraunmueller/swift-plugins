@@ -18,7 +18,7 @@ final class CalculatorPluginObject: CalculatorPluginInterface, PluginLifecycle {
         print("--- CalculatorPluginObject destroyed ---")
     }
 
-    // MARK: CalculatorPluginInterface
+    // MARK: - CalculatorPluginInterface
 
     private(set) var adderPlugin: AdderPluginInterface?
     
@@ -27,7 +27,7 @@ final class CalculatorPluginObject: CalculatorPluginInterface, PluginLifecycle {
         return adderPlugin!.add(lhs: lhs, rhs: rhs)
     }
 
-    // MARK: PluginLifecycle
+    // MARK: - PluginLifecycle
 
     private(set) var state: PluginState = .stopped
     

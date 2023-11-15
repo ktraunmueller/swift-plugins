@@ -14,14 +14,14 @@ final class AdderPluginObject: AdderPluginInterface, PluginLifecycle {
         print("--- AdderPluginObject destroyed 🗑️ ---")
     }
 
-    // MARK: AdderPluginInterface
+    // MARK: - AdderPluginInterface
 
     func add(lhs: Int, rhs: Int) -> Int {
         print("AdderPluginObject: add(\(lhs), \(rhs))")
         return lhs + rhs
     }
 
-    // MARK: PluginLifecycle
+    // MARK: - PluginLifecycle
 
     private(set) var state: PluginState = .stopped
     
