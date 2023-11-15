@@ -41,6 +41,7 @@
 		8EC9EB0A2B02545D0087A565 /* PluginLifecycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginLifecycle.swift; sourceTree = "<group>"; };
 		8EC9EB0C2B0254810087A565 /* PluginError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginError.swift; sourceTree = "<group>"; };
 		8ED706292B03AFB00058BF87 /* CalculatorPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorPlugin.swift; sourceTree = "<group>"; };
+		8EFA430E2B04CBCD00B9CD74 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +66,7 @@
 		8E67798D2AFD01F10089DEE5 = {
 			isa = PBXGroup;
 			children = (
+				8EFA430E2B04CBCD00B9CD74 /* README.md */,
 				8E67799B2AFD01F10089DEE5 /* Plugins.docc */,
 				8E6779992AFD01F10089DEE5 /* Source */,
 				8E6779A52AFD01F10089DEE5 /* Tests */,
