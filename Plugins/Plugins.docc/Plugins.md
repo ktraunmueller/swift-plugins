@@ -8,7 +8,7 @@ This framework provides mechanisms for contributing and consuming functionality 
 the form of _plugins_. The core idea is to facilitate loosely coupled software 
 systems with good separation of concerns. 
 
-> Note: This framework is loosely inspired by the plugin architecture of the Eclipse Rich Client Platform.
+> Note: This framework is loosely inspired by the plugin architecture of [Eclipse](https://aosabook.org/en/v1/eclipse.html).
 
 ### Plugins
 
@@ -18,7 +18,7 @@ The functionality provided by a plugin is formalized trough its
 _plugin interface_. Here's a simple example of a plugin interface:
 
 ```swift
-protocol AdderInterface: AnyObject {
+protocol AdderPluginInterface: AnyObject {
     func add(lhs: Int, rhs: Int) -> Int
 }
 ```
@@ -28,25 +28,28 @@ protocol AdderInterface: AnyObject {
 The implementation of the plugin interface is provided by a corresponding _plugin object_:
 
 ```swift
-final class AdderObject: AdderInterface, PluginLifecycle {
+final class AdderPluginObject: AdderPluginInterface, PluginLifecycle {
     
-    // MARK: AdderInterface
+    // MARK: AdderPluginInterface
 
     func add(lhs: Int, rhs: Int) -> Int {
         return lhs + rhs
     }
 
     // MARK: PluginLifecycle
-
     ...
 }
 ```
 
+> Note: Plugin objects should be cheap to create. In other words, they should not allocate
+any resources or perform any significant operations on initialization. Any heavy lifting
+should only occur during plugin startup (see plugin lifecycle below).
+
 ### The Plugin Lifecycle
 
-Plugins are instantiated and prepared for use only when needed. Regardless of the number of 
+Plugins are instantiated and prepared for use ("activated") only when needed. Regardless of the number of 
 plugins registered in a system, initially there will be zero plugin objects in memory. 
-In addition to being lazy-instantiated, plugins which are no longer needed are shut down, 
+In addition to being lazy-activated, plugins which are no longer needed are shut down, 
 and their plugin objects deallocated.
 
 This forms a simple _plugin lifecycle_:
@@ -80,7 +83,7 @@ plugin handles, let's have a look at the _plugin registry_.
 
 ### The Plugin Registry
 
-The plugin registry is the central registration and lookup point for plugins. Plugins must 
+The plugin registry is the central registration and lookup facility for plugins. Plugins must 
 be registered with the plugin registry before clients can use them, and handles to plugins 
 can only be obtained from the plugin registry.
 
@@ -90,19 +93,19 @@ closure that (lazily) creates the plugin object:
 ```swift
 let registry = PluginRegistry()
 ...
-try registry.register(AdderInterface.self) {
-    return AdderObject()
+try registry.register(AdderPluginInterface.self) {
+    return AdderPluginObject()
 }
 ```
 
 The factory closure will be invoked whenever a new instance of the plugin object is needed. 
 This will be handled transparently, i.e. hidden from clients.
 
-In order to consume functionality, clients need to look up a plugin (which is again 
-identified by the plugin interface type) in the registry:
+In order to consume functionality provided by a plugin, clients need to look up the plugin 
+(which is again identified by its plugin interface type) in the registry:
 ```swift
 do {
-    let pluginHandle = try registry.lookup(AdderInterface.self)
+    let pluginHandle = try registry.lookup(AdderPluginInterface.self)
 } catch PluginError.notRegistered { }
 ```
 
@@ -135,7 +138,7 @@ asynchronous function.
 If plugin startup has been successful, clients can then consume the services
 provided by the plugin through the plugin interface.
 
-Similar to lazy plugin startup, plugins that are no longer in use (i.e., no longer 
+Similar to lazy plugin activation, plugins that are no longer in use (i.e., no longer 
 referenced by any clients) will be shut down automatically to conserve resources. 
 When a client is done using a plugin, it is expected to call ``PluginHandle/release()``
 to relinquish the plugin interface. ``PluginHandle/acquire()`` and ``PluginHandle/release()``
