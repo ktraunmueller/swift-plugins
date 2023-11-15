@@ -20,6 +20,7 @@ public final class PluginHandle<PluginInterface> {
         print("PluginHandle: acquiring \(String(describing: PluginInterface.self))")
         if pluginObject.state == .stopped {
             do {
+                print("PluginHandle: acquiring dependencies for \(String(describing: PluginInterface.self))...")
                 if let registry = registry {
                     try await pluginObject.acquireDependencies(from: registry)
                 }
@@ -54,6 +55,7 @@ public final class PluginHandle<PluginInterface> {
                     try await pluginObject.stop()
                     print("PluginHandle: \(String(describing: pluginObject)) stopped 🛑")
                     assert(pluginObject.state == .stopped)
+                    print("PluginHandle: releasing dependencies for \(String(describing: PluginInterface.self))...")
                     if let registry = registry {
                         try await pluginObject.releaseDependencies(in: registry)
                     }

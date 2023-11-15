@@ -10,14 +10,14 @@ protocol GeometryPluginInterface: AnyObject {
     var mainViewController: UIViewController? { get }
 }
 
-final class GeometryPlugin: GeometryPluginInterface, PluginLifecycle {
+final class GeometryPluginObject: GeometryPluginInterface, PluginLifecycle {
 
     init() {
-        print("+++ GeometryPlugin created +++")
+        print("GeometryPluginObject created 🎉")
     }
     
     deinit {
-        print("--- GeometryPlugin destroyed ---")
+        print("GeometryPluginObject destroyed 🗑️")
     }
     
     // MARK: - GeometryPluginInterface

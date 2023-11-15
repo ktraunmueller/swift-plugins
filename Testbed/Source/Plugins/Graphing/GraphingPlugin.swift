@@ -10,14 +10,14 @@ protocol GraphingPluginInterface: AnyObject {
     var mainViewController: UIViewController? { get }
 }
 
-final class GraphingPlugin: GraphingPluginInterface, PluginLifecycle {
+final class GraphingPluginObject: GraphingPluginInterface, PluginLifecycle {
     
     init() {
-        print("+++ GraphingPlugin created +++")
+        print("GraphingPluginObject created 🎉")
     }
     
     deinit {
-        print("--- GraphingPlugin destroyed ---")
+        print("GraphingPluginObject destroyed 🗑️")
     }
     
     // MARK: - GraphingPluginInterface

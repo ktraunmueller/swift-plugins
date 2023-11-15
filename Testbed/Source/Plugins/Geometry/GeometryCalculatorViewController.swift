@@ -4,7 +4,7 @@ import UIKit
 final class GeometryCalculatorViewController: UIViewController {
 
     deinit {
-        print("--- GeometryCalculatorViewController destroyed ---")
+        print("GeometryCalculatorViewController destroyed 🗑️")
     }
     
     // MARK: - UIViewController
@@ -12,7 +12,7 @@ final class GeometryCalculatorViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
-        print("+++ GeometryCalculatorViewController created +++")
+        print("GeometryCalculatorViewController created 🎉")
     }
     
     required init?(coder: NSCoder) {

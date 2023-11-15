@@ -19,7 +19,7 @@ public final class PluginRegistry {
         guard factories[identifier] == nil else {
             throw PluginError.pluginAlreadyRegistered
         }
-        print("PluginRegistry: registering \(identifier)")
+        print("PluginRegistry: registering \(identifier) 🗄️")
         factories[identifier] = factory
     }
     

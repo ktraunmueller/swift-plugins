@@ -7,14 +7,14 @@ protocol UIPluginInterface: AnyObject {
 //    func present(dialog: UIViewController)
 }
 
-final class UIPlugin: UIPluginInterface, PluginLifecycle {
+final class UIPluginObject: UIPluginInterface, PluginLifecycle {
     
     init() {
-        print("+++ UIPlugin created +++")
+        print("UIPluginObject created 🎉")
     }
     
     deinit {
-        print("--- UIPlugin destroyed ---")
+        print("UIPluginObject destroyed 🗑️")
     }
     
     // MARK: - UIPluginInterface

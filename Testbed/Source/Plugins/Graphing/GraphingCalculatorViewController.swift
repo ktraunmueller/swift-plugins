@@ -4,7 +4,7 @@ import UIKit
 final class GraphingCalculatorViewController: UIViewController {
 
     deinit {
-        print("--- GraphingCalculatorViewController destroyed ---")
+        print("GraphingCalculatorViewController destroyed 🗑️")
     }
     
     @objc
@@ -25,7 +25,7 @@ final class GraphingCalculatorViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
-        print("+++ GraphingCalculatorViewController created +++")
+        print("GraphingCalculatorViewController created 🎉")
     }
     
     required init?(coder: NSCoder) {

@@ -8,13 +8,13 @@ enum GlobalScope {
     static func registerPlugins() {
         do {
             try pluginRegistry.register(UIPluginInterface.self) {
-                return UIPlugin()
+                return UIPluginObject()
             }
             try pluginRegistry.register(GraphingPluginInterface.self) {
-                return GraphingPlugin()
+                return GraphingPluginObject()
             }
             try pluginRegistry.register(GeometryPluginInterface.self) {
-                return GeometryPlugin()
+                return GeometryPluginObject()
             }
         } catch let error {
             print(error)
