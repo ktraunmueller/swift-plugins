@@ -3,7 +3,6 @@ import Plugins
 import UIKit
 
 protocol GraphingPluginInterface: AnyObject {
-    
     // dependencies
     var appSwitcherPlugin: AppSwitcherPluginInterface? { get }
     

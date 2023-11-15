@@ -15,8 +15,13 @@ protocol AppSwitcherPluginInterface: AnyObject {
 
 final class AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle {
     
+    // These are not considered dependencies in the narrow sense: dependencies are
+    // started when a plugin starts, and we don't want these plugins to start when
+    // the app switcher plugin starts - only when we actually need one or the other.
     private var geometryPluginHandle: PluginHandle<GeometryPluginInterface>?
+    private var geometryPlugin: GeometryPluginInterface?
     private var graphingPluginHandle: PluginHandle<GraphingPluginInterface>?
+    private var graphingPlugin: GraphingPluginInterface?
 
     init() {
         print("AppSwitcherPluginObject created 🎉")
@@ -97,8 +102,6 @@ final class AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle
     // MARK: - AppSwitcherPluginInterface
     
     private(set) var uiPlugin: UIPluginInterface?
-    private(set) var geometryPlugin: GeometryPluginInterface?
-    private(set) var graphingPlugin: GraphingPluginInterface?
     
     private(set) var appSwitcherViewController: UIViewController?
     

@@ -3,7 +3,6 @@ import Plugins
 import UIKit
 
 protocol GeometryPluginInterface: AnyObject {
-    
     // dependencies
     var appSwitcherPlugin: AppSwitcherPluginInterface? { get }
     
