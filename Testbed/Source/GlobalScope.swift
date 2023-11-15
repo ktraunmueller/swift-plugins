@@ -1,3 +1,5 @@
+import UIKit
+
 import Plugins
 
 enum GlobalScope {
@@ -5,10 +7,10 @@ enum GlobalScope {
     static let pluginRegistry = PluginRegistry()
     
     // move elsewhere?
-    static func registerPlugins() {
+    static func registerPlugins(window: UIWindow?) {
         do {
             try pluginRegistry.register(UIPluginInterface.self) {
-                return UIPluginObject()
+                return UIPluginObject(window: window)
             }
             try pluginRegistry.register(TabUIPluginInterface.self) {
                 return TabUIPluginObject()

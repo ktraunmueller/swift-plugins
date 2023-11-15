@@ -45,6 +45,7 @@ public final class PluginHandle<PluginInterface> {
     /// will be stopped.
     public func release() async throws {
         print("PluginHandle: releasing \(String(describing: PluginInterface.self))")
+        assert(usageCount > 0)
         usageCount -= 1
         print("PluginHandle: \(String(describing: pluginObject)) usage count now \(usageCount)")
         if pluginObject.state == .started {

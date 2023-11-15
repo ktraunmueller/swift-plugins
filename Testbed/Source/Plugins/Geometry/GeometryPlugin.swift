@@ -5,7 +5,7 @@ import UIKit
 protocol GeometryPluginInterface: AnyObject {
     
     // dependencies
-    var uiPlugin: UIPluginInterface? { get }
+    var appSwitcherPlugin: AppSwitcherPluginInterface? { get }
     
     var mainViewController: UIViewController? { get }
 }
@@ -20,9 +20,13 @@ final class GeometryPluginObject: GeometryPluginInterface, PluginLifecycle {
         print("GeometryPluginObject destroyed 🗑️")
     }
     
+    func closeApp() {
+        appSwitcherPlugin?.closeCurrentApp()
+    }
+    
     // MARK: - GeometryPluginInterface
         
-    private(set) var uiPlugin: UIPluginInterface?
+    private(set) var appSwitcherPlugin: AppSwitcherPluginInterface?
     
     private(set) var mainViewController: UIViewController?
     
@@ -31,14 +35,14 @@ final class GeometryPluginObject: GeometryPluginInterface, PluginLifecycle {
     private(set) var state: Plugins.PluginState = .stopped
     
     func acquireDependencies(from registry: PluginRegistry) async throws {
-        let uiPluginHandle = try registry.lookup(UIPluginInterface.self)
-        uiPlugin = try await uiPluginHandle.acquire()
+        let appSwitcherPluginHandle = try registry.lookup(AppSwitcherPluginInterface.self)
+        appSwitcherPlugin = try await appSwitcherPluginHandle.acquire()
     }
     
     func releaseDependencies(in registry: PluginRegistry) async throws {
-        let uiPluginHandle = try registry.lookup(UIPluginInterface.self)
-        try await uiPluginHandle.release()
-        uiPlugin = nil
+        let appSwitcherPluginHandle = try registry.lookup(AppSwitcherPluginInterface.self)
+        try await appSwitcherPluginHandle.release()
+        appSwitcherPlugin = nil
     }
     
     func markAsStarting() {
@@ -47,7 +51,7 @@ final class GeometryPluginObject: GeometryPluginInterface, PluginLifecycle {
     
     func start() async throws {
         mainViewController = await MainActor.run {
-            GeometryCalculatorViewController(nibName: nil, bundle: nil)
+            GeometryCalculatorViewController(plugin: self)
         }
         state = .started
     }
