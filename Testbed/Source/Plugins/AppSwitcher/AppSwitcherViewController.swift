@@ -9,7 +9,7 @@ final class AppSwitcherViewController: UIViewController {
         self.plugin = plugin
         super.init(nibName: nil, bundle: nil)
         
-        print("AppSwitcherViewController created 🎉")
+        print("AppSwitcherPlugin > AppSwitcherViewController created 🎉")
     }
     
     required init?(coder: NSCoder) {
@@ -17,7 +17,7 @@ final class AppSwitcherViewController: UIViewController {
     }
     
     deinit {
-        print("AppSwitcherViewController destroyed 🗑️")
+        print("AppSwitcherPlugin > AppSwitcherViewController destroyed 🗑️")
     }
     
     private func setupAppButtons() {
@@ -62,7 +62,7 @@ final class AppSwitcherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("AppSwitcherViewController: viewDidLoad")
+        print("AppSwitcherPlugin > AppSwitcherViewController.viewDidLoad()")
         
         view.backgroundColor = .white
         title = "AppSwitcher"

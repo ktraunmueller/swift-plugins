@@ -12,11 +12,11 @@ protocol GeometryPluginInterface: AnyObject {
 final class GeometryPluginObject: GeometryPluginInterface, PluginLifecycle {
 
     init() {
-        print("GeometryPluginObject created 🎉")
+        print("GeometryPlugin > GeometryPluginObject created 🎉")
     }
     
     deinit {
-        print("GeometryPluginObject destroyed 🗑️")
+        print("GeometryPlugin > GeometryPluginObject destroyed 🗑️")
     }
     
     func closeApp() {

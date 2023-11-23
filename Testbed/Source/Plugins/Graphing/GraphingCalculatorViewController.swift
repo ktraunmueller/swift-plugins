@@ -9,7 +9,7 @@ final class GraphingCalculatorViewController: UIViewController {
         self.plugin = plugin
         super.init(nibName: nil, bundle: nil)
         
-        print("GraphingCalculatorViewController created 🎉")
+        print("GraphingPlugin > GraphingCalculatorViewController created 🎉")
     }
 
     required init?(coder: NSCoder) {
@@ -17,7 +17,7 @@ final class GraphingCalculatorViewController: UIViewController {
     }
 
     deinit {
-        print("GraphingCalculatorViewController destroyed 🗑️")
+        print("GraphingPlugin > GraphingCalculatorViewController destroyed 🗑️")
     }
     
     @objc private func closeScreen() {
@@ -29,7 +29,7 @@ final class GraphingCalculatorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("GraphingCalculatorViewController: viewDidLoad")
+        print("GraphingPlugin > GraphingCalculatorViewController.viewDidLoad")
         
         view.backgroundColor = UIColor(red: (0xB2 / 255.0), green: (0xEB / 255.0), blue: (0xF2 / 255.0), alpha: 1)
         title = "Graphing"

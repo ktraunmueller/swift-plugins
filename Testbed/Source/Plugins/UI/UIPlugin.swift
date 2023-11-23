@@ -14,16 +14,17 @@ final class UIPluginObject: UIPluginInterface, PluginLifecycle {
     
     init(window: UIWindow?) {
         self.window = window
-        print("UIPluginObject created 🎉")
+        print("UIPlugin > UIPluginObject created 🎉")
     }
     
     deinit {
-        print("UIPluginObject destroyed 🗑️")
+        print("UIPlugin > UIPluginObject destroyed 🗑️")
     }
     
     // MARK: - UIPluginInterface
     
     func presentOnRoot(_ viewController: UIViewController) {
+        print("UIPlugin > presentOnRoot()")
         guard let rootViewController = window?.rootViewController else {
             return
         }
@@ -35,6 +36,7 @@ final class UIPluginObject: UIPluginInterface, PluginLifecycle {
     }
     
     func dismissFromRoot() {
+        print("UIPlugin > dismissFromRoot()")
         guard let rootViewController = window?.rootViewController else {
             return
         }

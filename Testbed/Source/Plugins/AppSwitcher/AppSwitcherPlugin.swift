@@ -24,11 +24,11 @@ final class AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle
     private var graphingPlugin: GraphingPluginInterface?
 
     init() {
-        print("AppSwitcherPluginObject created 🎉")
+        print("AppSwitcherPlugin > AppSwitcherPluginObject created 🎉")
     }
     
     deinit {
-        print("AppSwitcherPluginObject destroyed 🗑️")
+        print("AppSwitcherPlugin > AppSwitcherPluginObject destroyed 🗑️")
     }
     
     private func acquire<PluginInterface>(_ pluginHandle: PluginHandle<PluginInterface>?,
@@ -106,6 +106,7 @@ final class AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle
     private(set) var appSwitcherViewController: UIViewController?
     
     func switchToGeometry() {
+        print("AppSwitcherPlugin > switchToGeometry()")
         releaseGraphingPlugin()
         acquireGeometryPlugin() { [weak self] in
             if let geometryMainViewController = self?.geometryPlugin?.mainViewController {
@@ -115,6 +116,7 @@ final class AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle
     }
     
     func switchToGraphing() {
+        print("AppSwitcherPlugin > switchToGraphing()")
         releaseGeometryPlugin()
         acquireGraphingPlugin() { [weak self] in
             if let graphingMainViewController = self?.graphingPlugin?.mainViewController {
@@ -124,6 +126,7 @@ final class AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle
     }
     
     func closeCurrentApp() {
+        print("AppSwitcherPlugin > closeCurrentApp()")
         releaseGeometryPlugin()
         releaseGraphingPlugin()
         uiPlugin?.dismissFromRoot()

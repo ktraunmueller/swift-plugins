@@ -12,11 +12,11 @@ protocol TabUIPluginInterface: AnyObject {
 final class TabUIPluginObject: TabUIPluginInterface, PluginLifecycle {
     
     init() {
-        print("TabUIPluginObject created 🎉")
+        print("TabUIPlugin > TabUIPluginObject created 🎉")
     }
     
     deinit {
-        print("TabUIPluginObject destroyed 🗑️")
+        print("TabUIPlugin > TabUIPluginObject destroyed 🗑️")
     }
     
     // MARK: - TabUIPluginInterface

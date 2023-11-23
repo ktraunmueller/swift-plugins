@@ -17,25 +17,25 @@ public final class PluginHandle<PluginInterface> {
     ///
     /// This will start the plugin if it is currently stopped.
     public func acquire() async throws -> PluginInterface {
-        print("PluginHandle: acquiring \(String(describing: PluginInterface.self))")
+        print("PluginHandle > acquiring \(String(describing: PluginInterface.self))")
         if pluginObject.state == .stopped {
             do {
-                print("PluginHandle: acquiring dependencies for \(String(describing: PluginInterface.self))...")
+                print("PluginHandle > acquiring dependencies for \(String(describing: PluginInterface.self))...")
                 if let registry = registry {
                     try await pluginObject.acquireDependencies(from: registry)
                 }
-                print("PluginHandle: starting \(String(describing: pluginObject))...")
+                print("PluginHandle > starting \(String(describing: pluginObject))...")
                 pluginObject.markAsStarting()
                 try await pluginObject.start()
                 assert(pluginObject.state == .started)
-                print("PluginHandle: \(String(describing: pluginObject)) started 🟢")
+                print("PluginHandle > \(String(describing: pluginObject)) started 🟢")
             }
             catch let error {
                 throw error // simply rethrow for now
             }
         }
         usageCount += 1
-        print("PluginHandle: \(String(describing: pluginObject)) usage count now \(usageCount)")
+        print("PluginHandle > \(String(describing: pluginObject)) usage count now \(usageCount)")
         return pluginObject as! PluginInterface
     }
     
@@ -44,19 +44,19 @@ public final class PluginHandle<PluginInterface> {
     /// If this brings the plugin's usage count to zero, the plugin
     /// will be stopped.
     public func release() async throws {
-        print("PluginHandle: releasing \(String(describing: PluginInterface.self))")
+        print("PluginHandle > releasing \(String(describing: PluginInterface.self))")
         assert(usageCount > 0)
         usageCount -= 1
-        print("PluginHandle: \(String(describing: pluginObject)) usage count now \(usageCount)")
+        print("PluginHandle > \(String(describing: pluginObject)) usage count now \(usageCount)")
         if pluginObject.state == .started {
             if usageCount == 0 {
                 do {
-                    print("PluginHandle: stopping \(String(describing: pluginObject))...")
+                    print("PluginHandle > stopping \(String(describing: pluginObject))...")
                     pluginObject.markAsStopping()
                     try await pluginObject.stop()
-                    print("PluginHandle: \(String(describing: pluginObject)) stopped 🛑")
+                    print("PluginHandle > \(String(describing: pluginObject)) stopped 🛑")
                     assert(pluginObject.state == .stopped)
-                    print("PluginHandle: releasing dependencies for \(String(describing: PluginInterface.self))...")
+                    print("PluginHandle > releasing dependencies for \(String(describing: PluginInterface.self))...")
                     if let registry = registry {
                         try await pluginObject.releaseDependencies(in: registry)
                     }

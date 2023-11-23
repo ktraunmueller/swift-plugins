@@ -7,17 +7,17 @@ protocol AdderPluginInterface: AnyObject {
 final class AdderPluginObject: AdderPluginInterface, PluginLifecycle {
     
     init() {
-        print("+++ AdderPluginObject created 🎉 +++")
+        print("AdderPlugin > AdderPluginObject created 🎉")
     }
     
     deinit {
-        print("--- AdderPluginObject destroyed 🗑️ ---")
+        print("AdderPlugin > AdderPluginObject destroyed 🗑️")
     }
 
     // MARK: - AdderPluginInterface
 
     func add(lhs: Int, rhs: Int) -> Int {
-        print("AdderPluginObject: add(\(lhs), \(rhs))")
+        print("AdderPlugin > AdderPluginObject add(\(lhs), \(rhs))")
         return lhs + rhs
     }
 

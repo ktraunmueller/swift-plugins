@@ -19,7 +19,7 @@ public final class PluginRegistry {
         guard factories[identifier] == nil else {
             throw PluginError.pluginAlreadyRegistered
         }
-        print("PluginRegistry: registering \(identifier) 🗄️")
+        print("PluginRegistry > registering \(identifier) 🗄️")
         factories[identifier] = factory
     }
     
@@ -30,7 +30,7 @@ public final class PluginRegistry {
     /// - Throws: PluginError.notRegistered if the given plugin interface type has not been registered.
     public func lookup<PluginInterface>(_ pluginInterface: PluginInterface.Type) throws -> PluginHandle<PluginInterface> {
         let identifier = String(describing: pluginInterface)
-        //print("PluginRegistry: looking up \(identifier) 🔎")
+        //print("PluginRegistry > looking up \(identifier) 🔎")
         if let handle = handles[identifier] {
             return handle as! PluginHandle<PluginInterface>
         }

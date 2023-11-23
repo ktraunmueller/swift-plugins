@@ -9,7 +9,7 @@ final class GeometryCalculatorViewController: UIViewController {
         self.plugin = plugin
         super.init(nibName: nil, bundle: nil)
         
-        print("GeometryCalculatorViewController created 🎉")
+        print("GeometryPlugin > GeometryCalculatorViewController created 🎉")
     }
 
     required init?(coder: NSCoder) {
@@ -17,7 +17,7 @@ final class GeometryCalculatorViewController: UIViewController {
     }
 
     deinit {
-        print("GeometryCalculatorViewController destroyed 🗑️")
+        print("GeometryPlugin > GeometryCalculatorViewController destroyed 🗑️")
     }
     
     @objc private func closeScreen() {
@@ -29,7 +29,7 @@ final class GeometryCalculatorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("GeometryCalculatorViewController: viewDidLoad")
+        print("GeometryPlugin > GeometryCalculatorViewController.viewDidLoad")
         
         view.backgroundColor = UIColor(red: 1.0, green: (0xcd / 255.0), blue: (0xd2 / 255.0), alpha: 1)
         title = "Geometry"

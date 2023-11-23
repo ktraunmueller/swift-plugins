@@ -11,11 +11,11 @@ protocol CalculatorPluginInterface: AnyObject {
 final class CalculatorPluginObject: CalculatorPluginInterface, PluginLifecycle {
     
     init() {
-        print("+++ CalculatorPluginObject created +++")
+        print("CalculatorPlugin > CalculatorPluginObject created 🎉")
     }
     
     deinit {
-        print("--- CalculatorPluginObject destroyed ---")
+        print("CalculatorPlugin > CalculatorPluginObject destroyed 🗑️")
     }
 
     // MARK: - CalculatorPluginInterface
@@ -23,7 +23,7 @@ final class CalculatorPluginObject: CalculatorPluginInterface, PluginLifecycle {
     private(set) var adderPlugin: AdderPluginInterface?
     
     func add(lhs: Int, rhs: Int) -> Int {
-        print("CalculatorObject: add(\(lhs), \(rhs))")
+        print("CalculatorPluginObject: add(\(lhs), \(rhs))")
         return adderPlugin!.add(lhs: lhs, rhs: rhs)
     }
 

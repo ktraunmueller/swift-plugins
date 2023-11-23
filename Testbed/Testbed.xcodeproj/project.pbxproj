@@ -159,6 +159,7 @@
 			children = (
 				8ED7062B2B03B35D0058BF87 /* UI */,
 				8EFA43072B04B3A900B9CD74 /* AppSwitcher */,
+				8EFC492E2B0F4ADD00E9E6E5 /* Exam */,
 				8ED706262B03A0A00058BF87 /* Geometry */,
 				8EC9EB852B03916E0087A565 /* Graphing */,
 			);
@@ -199,6 +200,13 @@
 				8EFA430A2B04B60000B9CD74 /* AppSwitcherViewController.swift */,
 			);
 			path = AppSwitcher;
+			sourceTree = "<group>";
+		};
+		8EFC492E2B0F4ADD00E9E6E5 /* Exam */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Exam;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

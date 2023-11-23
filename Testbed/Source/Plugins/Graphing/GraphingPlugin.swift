@@ -12,11 +12,11 @@ protocol GraphingPluginInterface: AnyObject {
 final class GraphingPluginObject: GraphingPluginInterface, PluginLifecycle {
     
     init() {
-        print("GraphingPluginObject created 🎉")
+        print("GraphingPlugin > GraphingPluginObject created 🎉")
     }
     
     deinit {
-        print("GraphingPluginObject destroyed 🗑️")
+        print("GraphingPlugin > GraphingPluginObject destroyed 🗑️")
     }
     
     func closeApp() {
