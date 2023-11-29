@@ -18,22 +18,7 @@ public actor PluginHandle<PluginInterface> {
     /// This will start the plugin if it is currently stopped.
     public func acquire() async throws -> PluginInterface {
         print("🔌 PluginHandle > acquiring \(String(describing: PluginInterface.self))")
-        if await pluginObject.state == .stopped {
-            do {
-                print("🔌 PluginHandle > acquiring dependencies for \(String(describing: PluginInterface.self))...")
-                if let registry = registry {
-                    try await pluginObject.acquireDependencies(from: registry)
-                }
-                print("🔌 PluginHandle > starting \(String(describing: pluginObject))...")
-                await pluginObject.markAsStarting()
-                try await pluginObject.start()
-//                assert(pluginObject.state == .started)
-                print("🔌 PluginHandle > \(String(describing: pluginObject)) started 🟢")
-            }
-            catch let error {
-                throw error // simply rethrow for now
-            }
-        }
+        try await pluginObject.startIfNotRunning(registry: registry)
         usageCount += 1
         print("🔌 PluginHandle > \(String(describing: pluginObject)) usage count now \(usageCount)")
         return pluginObject as! PluginInterface
@@ -48,22 +33,48 @@ public actor PluginHandle<PluginInterface> {
         assert(usageCount > 0)
         usageCount -= 1
         print("🔌 PluginHandle > \(String(describing: pluginObject)) usage count now \(usageCount)")
-        if await pluginObject.state == .started {
-            if usageCount == 0 {
-                do {
-                    print("🔌 PluginHandle > stopping \(String(describing: pluginObject))...")
-                    await pluginObject.markAsStopping()
-                    try await pluginObject.stop()
-                    print("🔌 PluginHandle > \(String(describing: pluginObject)) stopped 🛑")
-//                    assert(pluginObject.state == .stopped)
-                    print("🔌 PluginHandle > releasing dependencies for \(String(describing: PluginInterface.self))...")
-                    if let registry = registry {
-                        try await pluginObject.releaseDependencies(in: registry)
-                    }
+        if usageCount == 0 {
+            try await pluginObject.stopIfRunning(registry: registry)
+        }
+    }
+}
+
+extension PluginLifecycle {
+    
+    fileprivate func startIfNotRunning(registry: PluginRegistry?) async throws {
+        if state == .stopped {
+            markAsStarting()
+            do {
+                print("🔌 PluginHandle > acquiring dependencies for \(String(describing: self.self))...")
+                if let registry = registry {
+                    try await acquireDependencies(from: registry)
                 }
-                catch let error {
-                    throw error
+                print("🔌 PluginHandle > starting \(String(describing: self.self))...")
+                try await start()
+                assert(state == .started)
+                print("🔌 PluginHandle > \(String(describing: self.self)) started 🟢")
+            }
+            catch let error {
+                throw error // simply rethrow for now
+            }
+        }
+    }
+    
+    fileprivate func stopIfRunning(registry: PluginRegistry?) async throws {
+        if state == .started {
+            markAsStopping()
+            do {
+                print("🔌 PluginHandle > stopping \(String(describing: self.self))...")
+                try await stop()
+                print("🔌 PluginHandle > \(String(describing: self.self)) stopped 🛑")
+                assert(state == .stopped)
+                print("🔌 PluginHandle > releasing dependencies for \(String(describing: self.self))...")
+                if let registry = registry {
+                    try await releaseDependencies(in: registry)
                 }
+            }
+            catch let error {
+                throw error
             }
         }
     }
