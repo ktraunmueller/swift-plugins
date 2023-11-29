@@ -18,7 +18,7 @@ public actor PluginRegistry {
     ///   - factory: The plugin object factory.
     ///   - pluginInterfaceType: The plugin interface type.
     public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
-                                                        factory: @escaping () -> PluginObject) async throws
+                                                        factory: @escaping () -> PluginObject) throws
     where PluginObject: PluginLifecycle {
         let identifier = makeIdentifier(describing: pluginInterfaceType)
         guard factories[identifier] == nil else {
@@ -30,9 +30,9 @@ public actor PluginRegistry {
     
     public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
                                                         activatedBy notificationNames: Set<NSNotification.Name>,
-                                                        factory: @escaping () -> PluginObject) async throws
+                                                        factory: @escaping () -> PluginObject) throws
     where PluginObject: PluginLifecycle & NotificationActivatedPlugin {
-        try await register(pluginInterfaceType, factory: factory)
+        try register(pluginInterfaceType, factory: factory)
         
         let identifier = makeIdentifier(describing: pluginInterfaceType)
         print("🗄️ PluginRegistry > registering notifications for \(identifier) 📫")
