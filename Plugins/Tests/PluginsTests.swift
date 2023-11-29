@@ -5,12 +5,12 @@ final class PluginsTests: XCTestCase {
     
     func testRegistrationAndLookup() async throws {
         let registry = PluginRegistry()
-        try registry.register(AdderPluginInterface.self) {
+        try await registry.register(AdderPluginInterface.self) {
             return AdderPluginObject()
         }
         
         do {
-            let pluginHandle = try registry.lookup(AdderPluginInterface.self)
+            let pluginHandle = try await registry.lookup(AdderPluginInterface.self)
             let pluginInterface = try await pluginHandle.acquire()
             let result = await pluginInterface.add(lhs: 1, rhs: 1)
             XCTAssertEqual(result, 2)
@@ -21,12 +21,12 @@ final class PluginsTests: XCTestCase {
     
     func testShutdownWhenUsageCountReachesZero() async throws {
         let registry = PluginRegistry()
-        try registry.register(AdderPluginInterface.self) {
+        try await registry.register(AdderPluginInterface.self) {
             return AdderPluginObject()
         }
         
         do {
-            let pluginHandle = try registry.lookup(AdderPluginInterface.self)
+            let pluginHandle = try await registry.lookup(AdderPluginInterface.self)
             let _ = try await pluginHandle.acquire()
             var usageCount = await pluginHandle.usageCount
             XCTAssertEqual(usageCount, 1)

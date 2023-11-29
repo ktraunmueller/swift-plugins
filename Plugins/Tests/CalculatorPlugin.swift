@@ -32,12 +32,12 @@ actor CalculatorPluginObject: CalculatorPluginInterface, PluginLifecycle {
     private(set) var state: PluginState = .stopped
     
     func acquireDependencies(from registry: PluginRegistry) async throws {
-        let adderPluginHandle = try registry.lookup(AdderPluginInterface.self)
+        let adderPluginHandle = try await registry.lookup(AdderPluginInterface.self)
         adderPlugin = try await adderPluginHandle.acquire()
     }
     
     func releaseDependencies(in registry: PluginRegistry) async throws {
-        let adderPluginHandle = try registry.lookup(AdderPluginInterface.self)
+        let adderPluginHandle = try await registry.lookup(AdderPluginInterface.self)
         try await adderPluginHandle.release()
         adderPlugin = nil
     }
