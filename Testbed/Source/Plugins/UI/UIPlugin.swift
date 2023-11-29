@@ -2,7 +2,8 @@ import Plugins
 
 import UIKit
 
-/// Note: All protocol requirements should be declared `@MainActor`.
+/// Note: All protocol requirements should be declared `@MainActor`, since
+/// they are all about interacting with the UI.
 protocol UIPluginInterface: Actor, NotificationActivatedPlugin {
         
     @MainActor
@@ -94,8 +95,8 @@ actor UIPluginObject: UIPluginInterface, PluginLifecycle {
         UIAccessibility.guidedAccessStatusDidChangeNotification
     ]
     
-    func handle(_ notification: Notification) {
-        print("UIPlugin > handling \(notification.name.rawValue) 📭")
+    func handle(_ notification: Notification.Name) {
+        print("UIPlugin > handling \(notification.rawValue) 📭")
     }
     
     // MARK: - PluginLifecycle

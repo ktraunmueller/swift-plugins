@@ -3,7 +3,7 @@ public actor PluginRegistry {
     
     private var factories: [String: () -> Any] = [:]
     private var pluginHandles: [String: AnyObject] = [:]
-    private var notificationHandlers: [Notification.Name: [String: (Notification) -> Void]] = [:]
+    private var notificationHandlers: [Notification.Name: [String: (Notification.Name) async -> Void]] = [:]
     
     public init() {
     }
@@ -39,7 +39,7 @@ public actor PluginRegistry {
         for notificationName in notificationNames {
             var handlers = notificationHandlers[notificationName] ?? [:]
             handlers[identifier] = { [weak self] notification in
-                self?.activateAndNotifyNonIsolated(pluginInterfaceType, notification: notification)
+                await self?.activateAndNotify(pluginInterfaceType, notification: notification)
             }
             notificationHandlers[notificationName] = handlers
             
@@ -80,15 +80,7 @@ public actor PluginRegistry {
         return pluginHandle
     }
     
-    nonisolated private func activateAndNotifyNonIsolated<PluginInterface>(_ pluginInterfaceType: PluginInterface.Type, notification: Notification) {
-        // TODO convert value of non-sendable type Notification to a value of a sendable type
-        Task {
-            await activateAndNotify(pluginInterfaceType, notification: notification)
-        }
-    }
-    
-    private func activateAndNotify<PluginInterface>(_ pluginInterfaceType: PluginInterface.Type, notification: Notification) async {
-        print("🗄️ PluginRegistry > received \(notification.name.rawValue) 📬")
+    private func activateAndNotify<PluginInterface>(_ pluginInterfaceType: PluginInterface.Type, notification: Notification.Name) async {
         let identifier = makeIdentifier(describing: pluginInterfaceType)
         do {
             let pluginHandle = try lookup(pluginInterfaceType)
@@ -105,20 +97,22 @@ public actor PluginRegistry {
         }
     }
     
-    private func notifyListeners(_ notification: Notification) {
-        guard let handlers = notificationHandlers[notification.name] else {
+    private func notifyListeners(_ notification: Notification.Name) async {
+        guard let handlers = notificationHandlers[notification] else {
             return
         }
         for handler in handlers.values {
-            handler(notification)
+            await handler(notification)
         }
     }
     
     // MARK: Notifications
     
     @objc nonisolated private func handle(_ notification: Notification) {
+        print("🗄️ PluginRegistry > received \(notification.name.rawValue) 📬")
+        let notificationName = notification.name
         Task {
-            await notifyListeners(notification)
+            await notifyListeners(notificationName)
         }
     }
 }
