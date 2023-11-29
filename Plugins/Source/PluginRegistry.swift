@@ -37,13 +37,12 @@ public actor PluginRegistry {
         let identifier = makeIdentifier(describing: pluginInterfaceType)
         print("🗄️ PluginRegistry > registering notifications for \(identifier) 📫")
         for notificationName in notificationNames {
-            // register plugin activator for notification name
             var handlers = notificationHandlers[notificationName] ?? [:]
             handlers[identifier] = { [weak self] notification in
-                self?.activateAndNotify(pluginInterfaceType, notification: notification)
+                self?.activateAndNotifyNonIsolated(pluginInterfaceType, notification: notification)
             }
             notificationHandlers[notificationName] = handlers
-
+            
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(handle(_:)),
                                                    name: notificationName,
@@ -81,24 +80,28 @@ public actor PluginRegistry {
         return pluginHandle
     }
     
-    nonisolated private func activateAndNotify<PluginInterface>(_ pluginInterfaceType: PluginInterface.Type, notification: Notification) {
+    nonisolated private func activateAndNotifyNonIsolated<PluginInterface>(_ pluginInterfaceType: PluginInterface.Type, notification: Notification) {
+        // TODO convert value of non-sendable type Notification to a value of a sendable type
+        Task {
+            await activateAndNotify(pluginInterfaceType, notification: notification)
+        }
+    }
+    
+    private func activateAndNotify<PluginInterface>(_ pluginInterfaceType: PluginInterface.Type, notification: Notification) async {
         print("🗄️ PluginRegistry > received \(notification.name.rawValue) 📬")
         let identifier = makeIdentifier(describing: pluginInterfaceType)
-        Task {
-            do {
-                let pluginHandle = try await lookup(pluginInterfaceType)
-                if await pluginHandle.usageCount == 0 {
-                    print("🗄️ PluginRegistry > notification-activating \(identifier)")
-                    _ = try await pluginHandle.acquire() // activate the plugin
-                }
-                let pluginInterface = try await pluginHandle.acquire()
-                if let notificationActivatedPlugin = pluginInterface as? NotificationActivatedPlugin {
-                    await notificationActivatedPlugin.handle(notification)
-                }
-                try await pluginHandle.release()
-            } catch let error {
-                print(error)
+        do {
+            let pluginHandle = try lookup(pluginInterfaceType)
+            if try await pluginHandle.activatePlugin() {
+                print("🗄️ PluginRegistry > notification-activated \(identifier)")
             }
+            let pluginInterface = try await pluginHandle.acquire()
+            if let notificationActivatedPlugin = pluginInterface as? NotificationActivatedPlugin {
+                await notificationActivatedPlugin.handle(notification)
+            }
+            try await pluginHandle.release()
+        } catch let error {
+            print(error)
         }
     }
     

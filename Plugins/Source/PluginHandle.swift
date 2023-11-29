@@ -6,7 +6,7 @@ public actor PluginHandle<PluginInterface> {
     
     private let pluginObject: PluginLifecycle
     private weak var registry: PluginRegistry?
-    private(set) var usageCount = 0 // accessible only for testing
+    private var usageCount = 0
     
     init(pluginObject: PluginLifecycle, pluginInterfaceType: PluginInterface.Type, registry: PluginRegistry) {
         self.pluginObject = pluginObject
@@ -18,9 +18,9 @@ public actor PluginHandle<PluginInterface> {
     /// This will start the plugin if it is currently stopped.
     public func acquire() async throws -> PluginInterface {
         print("🔌 PluginHandle > acquiring \(String(describing: PluginInterface.self))")
-        try await pluginObject.startIfNotRunning(registry: registry)
         usageCount += 1
         print("🔌 PluginHandle > \(String(describing: pluginObject)) usage count now \(usageCount)")
+        try await pluginObject.startIfNotRunning(registry: registry)
         return pluginObject as! PluginInterface
     }
     
@@ -37,13 +37,22 @@ public actor PluginHandle<PluginInterface> {
             try await pluginObject.stopIfRunning(registry: registry)
         }
     }
+    
+    func activatePlugin() async throws -> Bool {
+        if usageCount == 0 { // important: this check here...
+            usageCount = 1   // ...happens in synchronous code (no `await` inbetween), so it's correct
+            try await pluginObject.startIfNotRunning(registry: registry)
+            return true
+        }
+        return false
+    }
 }
 
 extension PluginLifecycle {
     
     fileprivate func startIfNotRunning(registry: PluginRegistry?) async throws {
-        if state == .stopped {
-            markAsStarting()
+        if state == .stopped {  // important: this check here...
+            markAsStarting()    // ...happens in synchronous code (no `await` inbetween), so it's correct
             do {
                 print("🔌 PluginHandle > acquiring dependencies for \(String(describing: self.self))...")
                 if let registry = registry {
@@ -61,8 +70,8 @@ extension PluginLifecycle {
     }
     
     fileprivate func stopIfRunning(registry: PluginRegistry?) async throws {
-        if state == .started {
-            markAsStopping()
+        if state == .started {  // important: this check here...
+            markAsStopping()    // ...happens in synchronous code (no `await` inbetween), so it's correct
             do {
                 print("🔌 PluginHandle > stopping \(String(describing: self.self))...")
                 try await stop()
