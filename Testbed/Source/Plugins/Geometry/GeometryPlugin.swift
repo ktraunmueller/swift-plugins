@@ -36,12 +36,12 @@ actor GeometryPluginObject: GeometryPluginInterface, PluginLifecycle {
     private(set) var state: Plugins.PluginState = .stopped
     
     func acquireDependencies(from registry: PluginRegistry) async throws {
-        let appSwitcherPluginHandle = try registry.lookup(AppSwitcherPluginInterface.self)
+        let appSwitcherPluginHandle = try await registry.lookup(AppSwitcherPluginInterface.self)
         appSwitcherPlugin = try await appSwitcherPluginHandle.acquire()
     }
     
     func releaseDependencies(in registry: PluginRegistry) async throws {
-        let appSwitcherPluginHandle = try registry.lookup(AppSwitcherPluginInterface.self)
+        let appSwitcherPluginHandle = try await registry.lookup(AppSwitcherPluginInterface.self)
         try await appSwitcherPluginHandle.release()
         appSwitcherPlugin = nil
     }

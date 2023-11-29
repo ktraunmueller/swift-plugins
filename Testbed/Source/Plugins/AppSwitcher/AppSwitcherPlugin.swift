@@ -123,15 +123,15 @@ actor AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle {
     private(set) var state: Plugins.PluginState = .stopped
     
     func acquireDependencies(from registry: PluginRegistry) async throws {
-        let uiPluginHandle = try registry.lookup(UIPluginInterface.self)
+        let uiPluginHandle = try await registry.lookup(UIPluginInterface.self)
         uiPlugin = try await uiPluginHandle.acquire()
         
-        geometryPluginHandle = try registry.lookup(GeometryPluginInterface.self)
-        graphingPluginHandle = try registry.lookup(GraphingPluginInterface.self)
+        geometryPluginHandle = try await registry.lookup(GeometryPluginInterface.self)
+        graphingPluginHandle = try await registry.lookup(GraphingPluginInterface.self)
     }
     
     func releaseDependencies(in registry: PluginRegistry) async throws {
-        let uiPluginHandle = try registry.lookup(UIPluginInterface.self)
+        let uiPluginHandle = try await registry.lookup(UIPluginInterface.self)
         try await uiPluginHandle.release()
         uiPlugin = nil
         

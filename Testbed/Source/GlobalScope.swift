@@ -8,28 +8,30 @@ enum GlobalScope {
     
     // move elsewhere?
     static func registerPlugins(window: UIWindow?) {
-        do {
-            try pluginRegistry.register(UIPluginInterface.self,
-                                        activatedBy: UIPluginObject.notifications) {
-                return UIPluginObject(window: window)
+        Task {
+            do {
+                try await pluginRegistry.register(UIPluginInterface.self,
+                                                  activatedBy: UIPluginObject.notifications) {
+                    return UIPluginObject(window: window)
+                }
+                try await pluginRegistry.register(TabUIPluginInterface.self) {
+                    return TabUIPluginObject()
+                }
+                try await pluginRegistry.register(AppSwitcherPluginInterface.self) {
+                    return AppSwitcherPluginObject()
+                }
+                try await pluginRegistry.register(ExamPluginInterface.self) {
+                    return ExamPluginObject()
+                }
+                try await pluginRegistry.register(GraphingPluginInterface.self) {
+                    return GraphingPluginObject()
+                }
+                try await pluginRegistry.register(GeometryPluginInterface.self) {
+                    return GeometryPluginObject()
+                }
+            } catch let error {
+                print(error)
             }
-            try pluginRegistry.register(TabUIPluginInterface.self) {
-                return TabUIPluginObject()
-            }
-            try pluginRegistry.register(AppSwitcherPluginInterface.self) {
-                return AppSwitcherPluginObject()
-            }
-            try pluginRegistry.register(ExamPluginInterface.self) {
-                return ExamPluginObject()
-            }
-            try pluginRegistry.register(GraphingPluginInterface.self) {
-                return GraphingPluginObject()
-            }
-            try pluginRegistry.register(GeometryPluginInterface.self) {
-                return GeometryPluginObject()
-            }
-        } catch let error {
-            print(error)
         }
     }
 }

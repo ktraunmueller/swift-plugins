@@ -1,7 +1,7 @@
 /// The central registration and lookup point for plugins.
 ///
 /// Note: This class is designed to be used on the main thread only.
-public final class PluginRegistry {
+public actor PluginRegistry {
     
     private var factories: [String: () -> Any] = [:]
     private var pluginHandles: [String: AnyObject] = [:]
@@ -20,7 +20,7 @@ public final class PluginRegistry {
     ///   - factory: The plugin object factory.
     ///   - pluginInterfaceType: The plugin interface type.
     public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
-                                                        factory: @escaping () -> PluginObject) throws
+                                                        factory: @escaping () -> PluginObject) async throws
     where PluginObject: PluginLifecycle {
         let identifier = makeIdentifier(describing: pluginInterfaceType)
         guard factories[identifier] == nil else {
@@ -32,25 +32,25 @@ public final class PluginRegistry {
     
     public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
                                                         activatedBy notificationNames: Set<NSNotification.Name>,
-                                                        factory: @escaping () -> PluginObject) throws
+                                                        factory: @escaping () -> PluginObject) async throws
     where PluginObject: PluginLifecycle & NotificationActivatedPlugin {
-        try register(pluginInterfaceType, factory: factory)
+        try await register(pluginInterfaceType, factory: factory)
         
         let identifier = makeIdentifier(describing: pluginInterfaceType)
         print("🗄️ PluginRegistry > registering notifications for \(identifier) 📫")
-        for notificationName in notificationNames {
+//        for notificationName in notificationNames {
             // register plugin activator for notification name
-            var handlers = notificationHandlers[notificationName] ?? [:]
-            handlers[identifier] = { [weak self] notification in
-                self?.activateAndNotify(pluginInterfaceType, notification: notification)
-            }
-            notificationHandlers[notificationName] = handlers
-            
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(handle(_:)),
-                                                   name: notificationName,
-                                                   object: nil)
-        }
+//            var handlers = notificationHandlers[notificationName] ?? [:]
+//            handlers[identifier] = { [weak self] notification in
+//                self?.activateAndNotify(pluginInterfaceType, notification: notification)
+//            }
+//            notificationHandlers[notificationName] = handlers
+//
+//            NotificationCenter.default.addObserver(self,
+//                                                   selector: #selector(handle(_:)),
+//                                                   name: notificationName,
+//                                                   object: nil)
+//        }
     }
     
     /// Look up a plugin.
@@ -94,7 +94,7 @@ public final class PluginRegistry {
                 }
                 let pluginInterface = try await pluginHandle.acquire()
                 if let notificationActivatedPlugin = pluginInterface as? NotificationActivatedPlugin {
-                    await notificationActivatedPlugin.handle(notification)
+//                    await notificationActivatedPlugin.handle(notification)
                 }
                 try await pluginHandle.release()
             } catch let error {
@@ -105,12 +105,12 @@ public final class PluginRegistry {
     
     // MARK: Notifications
     
-    @objc private func handle(_ notification: Notification) {
-        guard let handlers = notificationHandlers[notification.name] else {
-            return
-        }
-        for handler in handlers.values {
-            handler(notification)
-        }
-    }
+//    @objc private func handle(_ notification: Notification) {
+//        guard let handlers = notificationHandlers[notification.name] else {
+//            return
+//        }
+//        for handler in handlers.values {
+//            handler(notification)
+//        }
+//    }
 }
