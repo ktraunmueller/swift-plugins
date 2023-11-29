@@ -2,14 +2,14 @@ import Plugins
 
 import UIKit
 
-protocol GraphingPluginInterface: AnyObject {
+protocol GraphingPluginInterface: Actor {
     // dependencies
     var appSwitcherPlugin: AppSwitcherPluginInterface? { get }
     
     var mainViewController: UIViewController? { get }
 }
 
-final class GraphingPluginObject: GraphingPluginInterface, PluginLifecycle {
+actor GraphingPluginObject: GraphingPluginInterface, PluginLifecycle {
     
     init() {
         print("GraphingPlugin > GraphingPluginObject created 🎉")
@@ -20,7 +20,9 @@ final class GraphingPluginObject: GraphingPluginInterface, PluginLifecycle {
     }
     
     func closeApp() {
-        appSwitcherPlugin?.closeCurrentApp()
+        Task {
+            await appSwitcherPlugin?.closeCurrentApp()
+        }
     }
     
     // MARK: - GraphingPluginInterface

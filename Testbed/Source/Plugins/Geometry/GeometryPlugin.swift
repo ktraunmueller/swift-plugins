@@ -2,14 +2,14 @@ import Plugins
 
 import UIKit
 
-protocol GeometryPluginInterface: AnyObject {
+protocol GeometryPluginInterface: Actor {
     // dependencies
     var appSwitcherPlugin: AppSwitcherPluginInterface? { get }
     
     var mainViewController: UIViewController? { get }
 }
 
-final class GeometryPluginObject: GeometryPluginInterface, PluginLifecycle {
+actor GeometryPluginObject: GeometryPluginInterface, PluginLifecycle {
 
     init() {
         print("GeometryPlugin > GeometryPluginObject created 🎉")
@@ -20,7 +20,9 @@ final class GeometryPluginObject: GeometryPluginInterface, PluginLifecycle {
     }
     
     func closeApp() {
-        appSwitcherPlugin?.closeCurrentApp()
+        Task {
+            await appSwitcherPlugin?.closeCurrentApp()
+        }
     }
     
     // MARK: - GeometryPluginInterface

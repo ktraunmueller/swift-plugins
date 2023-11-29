@@ -12,7 +12,8 @@ final class PluginsTests: XCTestCase {
         do {
             let pluginHandle = try registry.lookup(AdderPluginInterface.self)
             let pluginInterface = try await pluginHandle.acquire()
-            XCTAssertEqual(pluginInterface.add(lhs: 1, rhs: 1), 2)
+            let result = await pluginInterface.add(lhs: 1, rhs: 1)
+            XCTAssertEqual(result, 2)
         } catch let error {
             print(error)
         }
@@ -27,9 +28,11 @@ final class PluginsTests: XCTestCase {
         do {
             let pluginHandle = try registry.lookup(AdderPluginInterface.self)
             let _ = try await pluginHandle.acquire()
-            XCTAssertEqual(pluginHandle.usageCount, 1)
+            var usageCount = await pluginHandle.usageCount
+            XCTAssertEqual(usageCount, 1)
             try await pluginHandle.release()
-            XCTAssertEqual(pluginHandle.usageCount, 0)
+            usageCount = await pluginHandle.usageCount
+            XCTAssertEqual(usageCount, 0)
         } catch let error {
             print(error)
         }

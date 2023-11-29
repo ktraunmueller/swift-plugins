@@ -21,7 +21,9 @@ final class GraphingCalculatorViewController: UIViewController {
     }
     
     @objc private func closeScreen() {
-        plugin?.closeApp()
+        Task {
+            await plugin?.closeApp()
+        }
     }
     
     // MARK: - UIViewController

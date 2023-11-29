@@ -1,14 +1,14 @@
 import Plugins
 
-protocol CalculatorPluginInterface: AnyObject {
+protocol CalculatorPluginInterface: Actor {
     
     // dependencies
     var adderPlugin: AdderPluginInterface? { get }
     
-    func add(lhs: Int, rhs: Int) -> Int
+    func add(lhs: Int, rhs: Int) async -> Int
 }
 
-final class CalculatorPluginObject: CalculatorPluginInterface, PluginLifecycle {
+actor CalculatorPluginObject: CalculatorPluginInterface, PluginLifecycle {
     
     init() {
         print("CalculatorPlugin > CalculatorPluginObject created 🎉")
@@ -22,9 +22,9 @@ final class CalculatorPluginObject: CalculatorPluginInterface, PluginLifecycle {
 
     private(set) var adderPlugin: AdderPluginInterface?
     
-    func add(lhs: Int, rhs: Int) -> Int {
+    func add(lhs: Int, rhs: Int) async -> Int {
         print("CalculatorPluginObject: add(\(lhs), \(rhs))")
-        return adderPlugin!.add(lhs: lhs, rhs: rhs)
+        return await adderPlugin!.add(lhs: lhs, rhs: rhs)
     }
 
     // MARK: - PluginLifecycle

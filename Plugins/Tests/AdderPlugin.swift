@@ -1,10 +1,10 @@
 import Plugins
 
-protocol AdderPluginInterface: AnyObject {
-    func add(lhs: Int, rhs: Int) -> Int
+protocol AdderPluginInterface: Actor {
+    func add(lhs: Int, rhs: Int) async -> Int
 }
 
-final class AdderPluginObject: AdderPluginInterface, PluginLifecycle {
+actor AdderPluginObject: AdderPluginInterface, PluginLifecycle {
     
     init() {
         print("AdderPlugin > AdderPluginObject created 🎉")
@@ -16,7 +16,7 @@ final class AdderPluginObject: AdderPluginInterface, PluginLifecycle {
 
     // MARK: - AdderPluginInterface
 
-    func add(lhs: Int, rhs: Int) -> Int {
+    func add(lhs: Int, rhs: Int) async -> Int {
         print("AdderPlugin > AdderPluginObject add(\(lhs), \(rhs))")
         return lhs + rhs
     }

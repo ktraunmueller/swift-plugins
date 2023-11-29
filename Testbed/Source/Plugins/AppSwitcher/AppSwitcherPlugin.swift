@@ -2,22 +2,27 @@ import Plugins
 
 import UIKit
 
-protocol AppSwitcherPluginInterface: AnyObject {
+protocol AppSwitcherPluginInterface: Actor {
     // dependencies
     var uiPlugin: UIPluginInterface? { get }
+    // weak dependencies?
+//    var geometryPlugin: GeometryPluginInterface? { get }
+//    var graphingPlugin: GraphingPluginInterface? { get }
     
+    @MainActor
     var appSwitcherViewController: UIViewController? { get }
     
-    func switchToGeometry()
-    func switchToGraphing()
-    func closeCurrentApp()
+    func switchToGeometry() async
+    func switchToGraphing() async
+    func closeCurrentApp() async
 }
 
-final class AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle {
+actor AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle {
     
-    // These are not considered dependencies in the narrow sense: dependencies are
-    // started when a plugin starts, and we don't want these plugins to start when
+    // These are not considered dependencies in the narrow sense: (regular) dependencies
+    // are started when a plugin starts, and we don't want these plugins to start when
     // the app switcher plugin starts - only when we actually need one or the other.
+    // TODO introduce concept of weak dependencies for this?
     private var geometryPluginHandle: PluginHandle<GeometryPluginInterface>?
     private var geometryPlugin: GeometryPluginInterface?
     private var graphingPluginHandle: PluginHandle<GraphingPluginInterface>?
@@ -31,71 +36,53 @@ final class AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle
         print("AppSwitcherPlugin > AppSwitcherPluginObject destroyed 🗑️")
     }
     
-    private func acquire<PluginInterface>(_ pluginHandle: PluginHandle<PluginInterface>?,
-                                          completion: @escaping (PluginInterface) -> Void) {
-        guard let pluginHandle = pluginHandle else {
-            return
-        }
-        Task {
-            do {
-                let plugin = try await pluginHandle.acquire()
-                await MainActor.run {
-                    completion(plugin)
-                }
-            } catch let error {
-                print(error)
-            }
-        }
-    }
-    
-    private func release<PluginInterface>(_ pluginHandle: PluginHandle<PluginInterface>?) {
-        guard let pluginHandle = pluginHandle else {
-            return
-        }
-        Task {
-            do {
-                try await pluginHandle.release()
-            } catch let error {
-                print(error)
-            }
-        }
-    }
-    
     // MARK: Geometry
     
-    private func acquireGeometryPlugin(completion: @escaping () -> Void) {
-        guard geometryPlugin == nil else {
+    private func acquireGeometryPlugin() async {
+        guard geometryPlugin == nil, let geometryPluginHandle else {
             return
         }
-        acquire(geometryPluginHandle, completion: { [weak self] plugin in
-            self?.geometryPlugin = plugin
-            completion()
-        })
+        do {
+            geometryPlugin = try await geometryPluginHandle.acquire()
+        } catch let error {
+            print(error)
+        }
     }
     
-    private func releaseGeometryPlugin() {
-        if geometryPlugin != nil {
+    private func releaseGeometryPlugin() async {
+        guard geometryPlugin != nil, let geometryPluginHandle else {
+            return
+        }
+        do {
+            try await geometryPluginHandle.release()
             geometryPlugin = nil
-            release(geometryPluginHandle)
+        } catch let error {
+            print(error)
         }
     }
     
     // MARK: Graphing
     
-    private func acquireGraphingPlugin(completion: @escaping () -> Void) {
-        guard graphingPlugin == nil else {
+    private func acquireGraphingPlugin() async {
+        guard graphingPlugin == nil, let graphingPluginHandle else {
             return
         }
-        acquire(graphingPluginHandle, completion: { [weak self] plugin in
-            self?.graphingPlugin = plugin
-            completion()
-        })
+        do {
+            graphingPlugin = try await graphingPluginHandle.acquire()
+        } catch let error {
+            print(error)
+        }
     }
     
-    private func releaseGraphingPlugin() {
-        if graphingPlugin != nil {
+    private func releaseGraphingPlugin() async {
+        guard graphingPlugin != nil, let graphingPluginHandle else {
+            return
+        }
+        do {
+            try await graphingPluginHandle.release()
             graphingPlugin = nil
-            release(graphingPluginHandle)
+        } catch let error {
+            print(error)
         }
     }
 
@@ -103,33 +90,32 @@ final class AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle
     
     private(set) var uiPlugin: UIPluginInterface?
     
+    @MainActor
     private(set) var appSwitcherViewController: UIViewController?
     
-    func switchToGeometry() {
+    func switchToGeometry() async {
         print("AppSwitcherPlugin > switchToGeometry()")
-        releaseGraphingPlugin()
-        acquireGeometryPlugin() { [weak self] in
-            if let geometryMainViewController = self?.geometryPlugin?.mainViewController {
-                self?.uiPlugin?.presentOnRoot(UINavigationController(rootViewController: geometryMainViewController))
-            }
+        await releaseGraphingPlugin()
+        await acquireGeometryPlugin()
+        if let geometryMainViewController = await geometryPlugin?.mainViewController {
+            await uiPlugin?.presentOnRoot(UINavigationController(rootViewController: geometryMainViewController))
         }
     }
     
-    func switchToGraphing() {
+    func switchToGraphing() async {
         print("AppSwitcherPlugin > switchToGraphing()")
-        releaseGeometryPlugin()
-        acquireGraphingPlugin() { [weak self] in
-            if let graphingMainViewController = self?.graphingPlugin?.mainViewController {
-                self?.uiPlugin?.presentOnRoot(UINavigationController(rootViewController: graphingMainViewController))
-            }
+        await releaseGeometryPlugin()
+        await acquireGraphingPlugin()
+        if let graphingMainViewController = await graphingPlugin?.mainViewController {
+            await uiPlugin?.presentOnRoot(UINavigationController(rootViewController: graphingMainViewController))
         }
     }
     
-    func closeCurrentApp() {
+    func closeCurrentApp() async {
         print("AppSwitcherPlugin > closeCurrentApp()")
-        releaseGeometryPlugin()
-        releaseGraphingPlugin()
-        uiPlugin?.dismissFromRoot()
+        await releaseGeometryPlugin()
+        await releaseGraphingPlugin()
+        await uiPlugin?.dismissFromRoot()
     }
     
     // MARK: - PluginLifecycle
@@ -149,8 +135,8 @@ final class AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle
         try await uiPluginHandle.release()
         uiPlugin = nil
         
-        releaseGeometryPlugin()
-        releaseGraphingPlugin()
+        await releaseGeometryPlugin()
+        await releaseGraphingPlugin()
     }
     
     func markAsStarting() {
@@ -158,8 +144,8 @@ final class AppSwitcherPluginObject: AppSwitcherPluginInterface, PluginLifecycle
     }
     
     func start() async throws {
-        appSwitcherViewController = await MainActor.run {
-            AppSwitcherViewController(plugin: self)
+        await MainActor.run {
+            appSwitcherViewController = AppSwitcherViewController(plugin: self)
         }
         state = .started
     }

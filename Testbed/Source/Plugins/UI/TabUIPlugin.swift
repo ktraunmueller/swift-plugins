@@ -2,14 +2,14 @@ import Plugins
 
 import UIKit
 
-protocol TabUIPluginInterface: AnyObject {
+protocol TabUIPluginInterface: Actor {
     // dependencies
     var uiPlugin: UIPluginInterface? { get }
     
     var tabBarController: UITabBarController? { get }
 }
 
-final class TabUIPluginObject: TabUIPluginInterface, PluginLifecycle {
+actor TabUIPluginObject: TabUIPluginInterface, PluginLifecycle {
     
     init() {
         print("TabUIPlugin > TabUIPluginObject created 🎉")

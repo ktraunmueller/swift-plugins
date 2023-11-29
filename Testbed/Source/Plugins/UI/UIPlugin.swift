@@ -2,21 +2,27 @@ import Plugins
 
 import UIKit
 
-protocol UIPluginInterface: AnyObject, NotificationActivatedPlugin {
+/// Note: All protocol requirements should be declared `@MainActor`.
+protocol UIPluginInterface: Actor, NotificationActivatedPlugin {
         
-    func registerNotifications()
-    
+    @MainActor
     func presentOnRoot(_ viewController: UIViewController)
+    @MainActor
     func dismissFromRoot()
     
-    func lockIntoSingleAppMode(completion: ((_ success: Bool) -> Void)?)
-    func unlockFromSingleAppMode(completion: ((_ success: Bool) -> Void)?)
+    @MainActor
+    func lockIntoSingleAppMode(completion: ((_ success: Bool) -> Void)?) async
+    @MainActor
+    func unlockFromSingleAppMode(completion: ((_ success: Bool) -> Void)?) async
 }
 
-final class UIPluginObject: UIPluginInterface, PluginLifecycle {
+actor UIPluginObject: UIPluginInterface, PluginLifecycle {
     
+    @MainActor
     private weak var window: UIWindow?
+    @MainActor
     private var endGuidedAccessSessionRetryCount = 0
+    @MainActor
     private let endGuidedAccessSessionMaxRetries = 5
     
     init(window: UIWindow?) {
@@ -28,46 +34,9 @@ final class UIPluginObject: UIPluginInterface, PluginLifecycle {
         print("UIPlugin > UIPluginObject destroyed 🗑️")
     }
     
-    // MARK: Notifications
-    
-    @objc
-    private func applicationDidFinishLaunching() {
-    }
-    
-    @objc
-    private func applicationDidBecomeActive() {
-    }
-    
-    @objc
-    private func applicationWillResignActive() {
-    }
-    
-    @objc
-    private func guidedAccessStatusDidChange() {
-        //UIAccessibility.isGuidedAccessEnabled
-    }
-    
     // MARK: - UIPluginInterface
     
-    func registerNotifications() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(applicationDidFinishLaunching),
-                                               name: UIApplication.didFinishLaunchingNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.applicationWillResignActive),
-                                               name: UIApplication.willResignActiveNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.applicationDidBecomeActive),
-                                               name: UIApplication.didBecomeActiveNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(guidedAccessStatusDidChange),
-                                               name: UIAccessibility.guidedAccessStatusDidChangeNotification,
-                                               object: nil)
-    }
-    
+    @MainActor
     func presentOnRoot(_ viewController: UIViewController) {
         print("UIPlugin > presentOnRoot()")
         guard let rootViewController = window?.rootViewController else {
@@ -80,6 +49,7 @@ final class UIPluginObject: UIPluginInterface, PluginLifecycle {
         })
     }
     
+    @MainActor
     func dismissFromRoot() {
         print("UIPlugin > dismissFromRoot()")
         guard let rootViewController = window?.rootViewController else {
@@ -88,6 +58,7 @@ final class UIPluginObject: UIPluginInterface, PluginLifecycle {
         rootViewController.dismiss(animated: true)
     }
     
+    @MainActor
     func lockIntoSingleAppMode(completion: ((Bool) -> Void)?) {
         endGuidedAccessSessionRetryCount = 0
         UIAccessibility.requestGuidedAccessSession(enabled: true) { success in
@@ -95,6 +66,7 @@ final class UIPluginObject: UIPluginInterface, PluginLifecycle {
         }
     }
     
+    @MainActor
     func unlockFromSingleAppMode(completion: ((Bool) -> Void)?) {
         UIAccessibility.requestGuidedAccessSession(enabled: true) { success in
             if success {
@@ -114,6 +86,7 @@ final class UIPluginObject: UIPluginInterface, PluginLifecycle {
     
     // MARK: - NotificationActivatedPlugin
     
+    @MainActor
     static let notifications: Set<NSNotification.Name> = [
         UIApplication.didFinishLaunchingNotification,
         UIApplication.willResignActiveNotification,

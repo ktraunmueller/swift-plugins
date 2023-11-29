@@ -18,16 +18,16 @@ public actor PluginHandle<PluginInterface> {
     /// This will start the plugin if it is currently stopped.
     public func acquire() async throws -> PluginInterface {
         print("🔌 PluginHandle > acquiring \(String(describing: PluginInterface.self))")
-        if pluginObject.state == .stopped {
+        if await pluginObject.state == .stopped {
             do {
                 print("🔌 PluginHandle > acquiring dependencies for \(String(describing: PluginInterface.self))...")
                 if let registry = registry {
                     try await pluginObject.acquireDependencies(from: registry)
                 }
                 print("🔌 PluginHandle > starting \(String(describing: pluginObject))...")
-                pluginObject.markAsStarting()
+                await pluginObject.markAsStarting()
                 try await pluginObject.start()
-                assert(pluginObject.state == .started)
+//                assert(pluginObject.state == .started)
                 print("🔌 PluginHandle > \(String(describing: pluginObject)) started 🟢")
             }
             catch let error {
@@ -48,14 +48,14 @@ public actor PluginHandle<PluginInterface> {
         assert(usageCount > 0)
         usageCount -= 1
         print("🔌 PluginHandle > \(String(describing: pluginObject)) usage count now \(usageCount)")
-        if pluginObject.state == .started {
+        if await pluginObject.state == .started {
             if usageCount == 0 {
                 do {
                     print("🔌 PluginHandle > stopping \(String(describing: pluginObject))...")
-                    pluginObject.markAsStopping()
+                    await pluginObject.markAsStopping()
                     try await pluginObject.stop()
                     print("🔌 PluginHandle > \(String(describing: pluginObject)) stopped 🛑")
-                    assert(pluginObject.state == .stopped)
+//                    assert(pluginObject.state == .stopped)
                     print("🔌 PluginHandle > releasing dependencies for \(String(describing: PluginInterface.self))...")
                     if let registry = registry {
                         try await pluginObject.releaseDependencies(in: registry)

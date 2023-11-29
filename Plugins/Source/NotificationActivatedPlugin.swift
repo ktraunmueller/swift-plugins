@@ -1,8 +1,8 @@
 import Foundation
 
-public protocol NotificationActivatedPlugin: AnyObject {
+public protocol NotificationActivatedPlugin: Actor {
 
     static var notifications: Set<NSNotification.Name> { get }
     
-    func handle(_ notification: Notification)
+    func handle(_ notification: Notification) async
 }

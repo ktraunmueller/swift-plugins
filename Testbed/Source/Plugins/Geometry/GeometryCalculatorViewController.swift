@@ -21,7 +21,9 @@ final class GeometryCalculatorViewController: UIViewController {
     }
     
     @objc private func closeScreen() {
-        plugin?.closeApp()
+        Task {
+            await plugin?.closeApp()
+        }
     }
     
     // MARK: - UIViewController

@@ -93,8 +93,8 @@ public final class PluginRegistry {
                     _ = try await pluginHandle.acquire() // activate the plugin
                 }
                 let pluginInterface = try await pluginHandle.acquire()
-                await MainActor.run {
-                    (pluginInterface as? NotificationActivatedPlugin)?.handle(notification)
+                if let notificationActivatedPlugin = pluginInterface as? NotificationActivatedPlugin {
+                    await notificationActivatedPlugin.handle(notification)
                 }
                 try await pluginHandle.release()
             } catch let error {

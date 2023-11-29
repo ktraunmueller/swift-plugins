@@ -13,7 +13,7 @@ public enum PluginState {
 /// Plugin objects are required to conform to ``PluginLifecycle``.
 /// 
 /// The plugin lifecycle will be handled transparently by ``PluginHandle``s.
-public protocol PluginLifecycle {
+public protocol PluginLifecycle: Actor {
     
     var state: PluginState { get }
 

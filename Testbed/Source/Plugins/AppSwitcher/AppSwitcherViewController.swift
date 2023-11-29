@@ -50,11 +50,15 @@ final class AppSwitcherViewController: UIViewController {
     // MARK: Actions
     
     @objc private func geometryButtonTapped() {
-        plugin?.switchToGeometry()
+        Task {
+            await plugin?.switchToGeometry()
+        }
     }
     
     @objc private func grahpingButtonTapped() {
-        plugin?.switchToGraphing()
+        Task {
+            await plugin?.switchToGraphing()
+        }
     }
     
     // MARK: - UIViewController
