@@ -9,7 +9,8 @@ enum GlobalScope {
     // move elsewhere?
     static func registerPlugins(window: UIWindow?) {
         do {
-            try pluginRegistry.register(UIPluginInterface.self) {
+            try pluginRegistry.register(UIPluginInterface.self,
+                                        activatedBy: UIPluginObject.notifications) {
                 return UIPluginObject(window: window)
             }
             try pluginRegistry.register(TabUIPluginInterface.self) {
@@ -17,6 +18,9 @@ enum GlobalScope {
             }
             try pluginRegistry.register(AppSwitcherPluginInterface.self) {
                 return AppSwitcherPluginObject()
+            }
+            try pluginRegistry.register(ExamPluginInterface.self) {
+                return ExamPluginObject()
             }
             try pluginRegistry.register(GraphingPluginInterface.self) {
                 return GraphingPluginObject()

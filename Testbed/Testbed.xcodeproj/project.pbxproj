@@ -23,6 +23,7 @@
 		8EFA43052B04A60B00B9CD74 /* Plugins.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC9EB7A2B037F830087A565 /* Plugins.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8EFA43092B04B3C400B9CD74 /* AppSwitcherPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFA43082B04B3C400B9CD74 /* AppSwitcherPlugin.swift */; };
 		8EFA430B2B04B60000B9CD74 /* AppSwitcherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFA430A2B04B60000B9CD74 /* AppSwitcherViewController.swift */; };
+		8EFC49302B0F586200E9E6E5 /* ExamPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFC492F2B0F586200E9E6E5 /* ExamPlugin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		8EFA43022B04A4E000B9CD74 /* TabUIPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabUIPlugin.swift; sourceTree = "<group>"; };
 		8EFA43082B04B3C400B9CD74 /* AppSwitcherPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSwitcherPlugin.swift; sourceTree = "<group>"; };
 		8EFA430A2B04B60000B9CD74 /* AppSwitcherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSwitcherViewController.swift; sourceTree = "<group>"; };
+		8EFC492F2B0F586200E9E6E5 /* ExamPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamPlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +207,7 @@
 		8EFC492E2B0F4ADD00E9E6E5 /* Exam */ = {
 			isa = PBXGroup;
 			children = (
+				8EFC492F2B0F586200E9E6E5 /* ExamPlugin.swift */,
 			);
 			path = Exam;
 			sourceTree = "<group>";
@@ -311,6 +314,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8EC9EB8B2B039AAA0087A565 /* UI.swift in Sources */,
+				8EFC49302B0F586200E9E6E5 /* ExamPlugin.swift in Sources */,
 				8EC9EB732B037F2D0087A565 /* AppDelegate.swift in Sources */,
 				8ED706282B03A0CE0058BF87 /* GeometryPlugin.swift in Sources */,
 				8EC9EB842B038F590087A565 /* GraphingPlugin.swift in Sources */,
