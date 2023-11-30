@@ -17,7 +17,6 @@
 		8EC9EB0B2B02545D0087A565 /* PluginLifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB0A2B02545D0087A565 /* PluginLifecycle.swift */; };
 		8EC9EB0D2B0254810087A565 /* PluginError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB0C2B0254810087A565 /* PluginError.swift */; };
 		8ED7062A2B03AFB00058BF87 /* CalculatorPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED706292B03AFB00058BF87 /* CalculatorPlugin.swift */; };
-		8EFC49382B0F757800E9E6E5 /* NotificationActivatedPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFC49372B0F757800E9E6E5 /* NotificationActivatedPlugin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,7 +42,6 @@
 		8EC9EB0C2B0254810087A565 /* PluginError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginError.swift; sourceTree = "<group>"; };
 		8ED706292B03AFB00058BF87 /* CalculatorPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorPlugin.swift; sourceTree = "<group>"; };
 		8EFA430E2B04CBCD00B9CD74 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		8EFC49372B0F757800E9E6E5 /* NotificationActivatedPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationActivatedPlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,7 +90,6 @@
 				8E6779B32AFD02470089DEE5 /* PluginHandle.swift */,
 				8EC9EB0A2B02545D0087A565 /* PluginLifecycle.swift */,
 				8E6779B22AFD02470089DEE5 /* PluginRegistry.swift */,
-				8EFC49372B0F757800E9E6E5 /* NotificationActivatedPlugin.swift */,
 				8E67799A2AFD01F10089DEE5 /* Plugins.h */,
 			);
 			path = Source;
@@ -218,7 +215,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E6779B62AFD02470089DEE5 /* PluginRegistry.swift in Sources */,
-				8EFC49382B0F757800E9E6E5 /* NotificationActivatedPlugin.swift in Sources */,
 				8E6779B72AFD02470089DEE5 /* PluginHandle.swift in Sources */,
 				8EC9EB0B2B02545D0087A565 /* PluginLifecycle.swift in Sources */,
 				8EC9EB0D2B0254810087A565 /* PluginError.swift in Sources */,
@@ -305,6 +301,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = targeted;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -362,6 +359,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = targeted;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";

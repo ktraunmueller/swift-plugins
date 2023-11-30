@@ -4,7 +4,7 @@ import UIKit
 
 /// Note: All protocol requirements should be declared `@MainActor`, since
 /// they are all about interacting with the UI.
-protocol UIPluginInterface: Actor, NotificationActivatedPlugin {
+protocol UIPluginInterface: Actor {
         
     @MainActor
     func presentOnRoot(_ viewController: UIViewController)
@@ -83,20 +83,6 @@ actor UIPluginObject: UIPluginInterface, PluginLifecycle {
                 }
             }
         }
-    }
-    
-    // MARK: - NotificationActivatedPlugin
-    
-    @MainActor
-    static let notifications: Set<NSNotification.Name> = [
-        UIApplication.didFinishLaunchingNotification,
-        UIApplication.willResignActiveNotification,
-        UIApplication.didBecomeActiveNotification,
-        UIAccessibility.guidedAccessStatusDidChangeNotification
-    ]
-    
-    func handle(_ notification: Notification.Name) {
-        print("UIPlugin > handling \(notification.rawValue) 📭")
     }
     
     // MARK: - PluginLifecycle

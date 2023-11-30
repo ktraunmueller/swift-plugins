@@ -1,14 +1,28 @@
 /// The central registration and lookup point for plugins.
 public actor PluginRegistry {
     
-    private var factories: [String: () -> Any] = [:]
-    private var pluginHandles: [String: AnyObject] = [:]
-    private var notificationHandlers: [Notification.Name: [String: (Notification.Name) async -> Void]] = [:]
+    public typealias Registrations = [String: () -> Any]
     
-    public init() {
+    public static func append<PluginObject, PluginInterface>(to registrations: inout Registrations,
+                                                             _ pluginInterfaceType: PluginInterface.Type,
+                                                             factory: @escaping () -> PluginObject) throws
+    where PluginObject: PluginLifecycle {
+        let identifier = makeIdentifier(describing: pluginInterfaceType)
+        guard registrations[identifier] == nil else {
+            throw PluginError.pluginAlreadyRegistered
+        }
+        print("🗄️ PluginRegistry > registering \(identifier)")
+        registrations[identifier] = factory
     }
     
-    nonisolated private func makeIdentifier<PluginInterface>(describing pluginInterfaceType: PluginInterface.Type) -> String {
+    private let registrations: Registrations
+    private var pluginHandles: [String: AnyObject] = [:]
+    
+    public init(_ registrations: Registrations = [:]) {
+        self.registrations = registrations
+    }
+    
+    private static func makeIdentifier<PluginInterface>(describing pluginInterfaceType: PluginInterface.Type) -> String {
         return String(describing: pluginInterfaceType)
     }
     
@@ -17,38 +31,16 @@ public actor PluginRegistry {
     /// - Parameters:
     ///   - factory: The plugin object factory.
     ///   - pluginInterfaceType: The plugin interface type.
-    public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
-                                                        factory: @escaping () -> PluginObject) throws
-    where PluginObject: PluginLifecycle {
-        let identifier = makeIdentifier(describing: pluginInterfaceType)
-        guard factories[identifier] == nil else {
-            throw PluginError.pluginAlreadyRegistered
-        }
-        print("🗄️ PluginRegistry > registering \(identifier)")
-        factories[identifier] = factory
-    }
-    
-    public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
-                                                        activatedBy notificationNames: Set<NSNotification.Name>,
-                                                        factory: @escaping () -> PluginObject) throws
-    where PluginObject: PluginLifecycle & NotificationActivatedPlugin {
-        try register(pluginInterfaceType, factory: factory)
-        
-        let identifier = makeIdentifier(describing: pluginInterfaceType)
-        print("🗄️ PluginRegistry > registering notifications for \(identifier) 📫")
-        for notificationName in notificationNames {
-            var handlers = notificationHandlers[notificationName] ?? [:]
-            handlers[identifier] = { [weak self] notification in
-                await self?.activateAndNotify(pluginInterfaceType, notification: notification)
-            }
-            notificationHandlers[notificationName] = handlers
-            
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(handle(_:)),
-                                                   name: notificationName,
-                                                   object: nil)
-        }
-    }
+//    public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
+//                                                        factory: @escaping () -> PluginObject) throws
+//    where PluginObject: PluginLifecycle {
+//        let identifier = PluginRegistry.makeIdentifier(describing: pluginInterfaceType)
+//        guard plugins[identifier] == nil else {
+//            throw PluginError.pluginAlreadyRegistered
+//        }
+//        print("🗄️ PluginRegistry > registering \(identifier)")
+//        plugins[identifier] = factory
+//    }
     
     /// Look up a plugin.
     ///
@@ -56,7 +48,7 @@ public actor PluginRegistry {
     /// - Returns: A ``PluginHandle`` if successful.
     /// - Throws: PluginError.notRegistered if the given plugin interface type has not been registered.
     public func lookup<PluginInterface>(_ pluginInterfaceType: PluginInterface.Type) throws -> PluginHandle<PluginInterface> {
-        let identifier = makeIdentifier(describing: pluginInterfaceType)
+        let identifier = PluginRegistry.makeIdentifier(describing: pluginInterfaceType)
         return try lookup(pluginIdentifier: identifier)
     }
     
@@ -64,7 +56,7 @@ public actor PluginRegistry {
         if let pluginHandle = pluginHandles[identifier] {
             return pluginHandle as! PluginHandle<PluginInterface>
         }
-        guard let factory = factories[identifier] else {
+        guard let factory = registrations[identifier] else {
             throw PluginError.pluginNotRegistered
         }
         guard let pluginObject = factory() as? PluginInterface else {
@@ -78,41 +70,5 @@ public actor PluginRegistry {
                                         registry: self)
         pluginHandles[identifier] = pluginHandle
         return pluginHandle
-    }
-    
-    private func activateAndNotify<PluginInterface>(_ pluginInterfaceType: PluginInterface.Type, notification: Notification.Name) async {
-        let identifier = makeIdentifier(describing: pluginInterfaceType)
-        do {
-            let pluginHandle = try lookup(pluginInterfaceType)
-            if try await pluginHandle.activatePlugin() {
-                print("🗄️ PluginRegistry > notification-activated \(identifier)")
-            }
-            let pluginInterface = try await pluginHandle.acquire()
-            if let notificationActivatedPlugin = pluginInterface as? NotificationActivatedPlugin {
-                await notificationActivatedPlugin.handle(notification)
-            }
-            try await pluginHandle.release()
-        } catch let error {
-            print(error)
-        }
-    }
-    
-    private func notifyListeners(_ notification: Notification.Name) async {
-        guard let handlers = notificationHandlers[notification] else {
-            return
-        }
-        for handler in handlers.values {
-            await handler(notification)
-        }
-    }
-    
-    // MARK: Notifications
-    
-    @objc nonisolated private func handle(_ notification: Notification) {
-        print("🗄️ PluginRegistry > received \(notification.name.rawValue) 📬")
-        let notificationName = notification.name
-        Task {
-            await notifyListeners(notificationName)
-        }
     }
 }

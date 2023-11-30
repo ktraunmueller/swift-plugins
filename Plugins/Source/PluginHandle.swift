@@ -6,7 +6,7 @@ public actor PluginHandle<PluginInterface> {
     
     private let pluginObject: PluginLifecycle
     private weak var registry: PluginRegistry?
-    private var usageCount = 0
+    private(set) var usageCount = 0 // note: internal for testing only
     
     init(pluginObject: PluginLifecycle, pluginInterfaceType: PluginInterface.Type, registry: PluginRegistry) {
         self.pluginObject = pluginObject
@@ -36,15 +36,6 @@ public actor PluginHandle<PluginInterface> {
         if usageCount == 0 {
             try await pluginObject.stopIfRunning(registry: registry)
         }
-    }
-    
-    func activatePlugin() async throws -> Bool {
-        if usageCount == 0 { // important: this check here...
-            usageCount = 1   // ...happens in synchronous code (no `await` inbetween), so it's correct
-            try await pluginObject.startIfNotRunning(registry: registry)
-            return true
-        }
-        return false
     }
 }
 
