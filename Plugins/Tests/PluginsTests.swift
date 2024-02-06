@@ -4,11 +4,11 @@ import XCTest
 final class PluginsTests: XCTestCase {
     
     func testRegistrationAndLookup() async throws {
-        var registrations: PluginRegistry.Registrations = [:]
-        try PluginRegistry.append(to: &registrations, AdderPluginInterface.self) {
+        var registrations = PluginRegistry.Registrations()
+        try PluginRegistry.register(AdderPluginInterface.self, with: &registrations) {
             return AdderPluginObject()
         }
-        let registry = PluginRegistry(registrations)
+        let registry = PluginRegistry(registrations: registrations)
         
         do {
             let pluginHandle = try await registry.lookup(AdderPluginInterface.self)
@@ -21,11 +21,11 @@ final class PluginsTests: XCTestCase {
     }
     
     func testShutdownWhenUsageCountReachesZero() async throws {
-        var registrations: PluginRegistry.Registrations = [:]
-        try PluginRegistry.append(to: &registrations, AdderPluginInterface.self) {
+        var registrations = PluginRegistry.Registrations()
+        try PluginRegistry.register(AdderPluginInterface.self, with: &registrations) {
             return AdderPluginObject()
         }
-        let registry = PluginRegistry(registrations)
+        let registry = PluginRegistry(registrations: registrations)
         
         do {
             let pluginHandle = try await registry.lookup(AdderPluginInterface.self)

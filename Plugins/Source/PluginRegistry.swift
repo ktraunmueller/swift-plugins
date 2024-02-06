@@ -3,9 +3,9 @@ public actor PluginRegistry {
     
     public typealias Registrations = [String: () -> Any]
     
-    public static func append<PluginObject, PluginInterface>(to registrations: inout Registrations,
-                                                             _ pluginInterfaceType: PluginInterface.Type,
-                                                             factory: @escaping () -> PluginObject) throws
+    public static func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
+                                                               with registrations: inout Registrations,
+                                                               factory: @escaping () -> PluginObject) throws
     where PluginObject: PluginLifecycle {
         let identifier = makeIdentifier(describing: pluginInterfaceType)
         guard registrations[identifier] == nil else {
@@ -18,29 +18,9 @@ public actor PluginRegistry {
     private let registrations: Registrations
     private var pluginHandles: [String: AnyObject] = [:]
     
-    public init(_ registrations: Registrations = [:]) {
+    public init(registrations: Registrations) {
         self.registrations = registrations
     }
-    
-    private static func makeIdentifier<PluginInterface>(describing pluginInterfaceType: PluginInterface.Type) -> String {
-        return String(describing: pluginInterfaceType)
-    }
-    
-    /// Register a plugin.
-    ///
-    /// - Parameters:
-    ///   - factory: The plugin object factory.
-    ///   - pluginInterfaceType: The plugin interface type.
-//    public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
-//                                                        factory: @escaping () -> PluginObject) throws
-//    where PluginObject: PluginLifecycle {
-//        let identifier = PluginRegistry.makeIdentifier(describing: pluginInterfaceType)
-//        guard plugins[identifier] == nil else {
-//            throw PluginError.pluginAlreadyRegistered
-//        }
-//        print("🗄️ PluginRegistry > registering \(identifier)")
-//        plugins[identifier] = factory
-//    }
     
     /// Look up a plugin.
     ///
@@ -70,5 +50,9 @@ public actor PluginRegistry {
                                         registry: self)
         pluginHandles[identifier] = pluginHandle
         return pluginHandle
+    }
+    
+    nonisolated private static func makeIdentifier<PluginInterface>(describing pluginInterfaceType: PluginInterface.Type) -> String {
+        return String(describing: pluginInterfaceType)
     }
 }

@@ -4,31 +4,31 @@ import Plugins
 
 enum GlobalScope {
     
-    static private(set) var pluginRegistry = PluginRegistry()
+    static private(set) var pluginRegistry = PluginRegistry(registrations: [:])
     
     // move elsewhere?
     static func registerPlugins(window: UIWindow?) {
         do {
-            var plugins: PluginRegistry.Plugins = [:]
-            try PluginRegistry.append(to: &plugins, UIPluginInterface.self) {
+            var registrations = PluginRegistry.Registrations()
+            try PluginRegistry.register(UIPluginInterface.self, with: &registrations) {
                 return UIPluginObject(window: window)
             }
-            try PluginRegistry.append(to: &plugins, TabUIPluginInterface.self) {
+            try PluginRegistry.register(TabUIPluginInterface.self, with: &registrations) {
                 return TabUIPluginObject()
             }
-            try PluginRegistry.append(to: &plugins, AppSwitcherPluginInterface.self) {
+            try PluginRegistry.register(AppSwitcherPluginInterface.self, with: &registrations) {
                 return AppSwitcherPluginObject()
             }
-            try PluginRegistry.append(to: &plugins, ExamPluginInterface.self) {
+            try PluginRegistry.register(ExamPluginInterface.self, with: &registrations) {
                 return ExamPluginObject()
             }
-            try PluginRegistry.append(to: &plugins, GraphingPluginInterface.self) {
+            try PluginRegistry.register(GraphingPluginInterface.self, with: &registrations) {
                 return GraphingPluginObject()
             }
-            try PluginRegistry.append(to: &plugins, GeometryPluginInterface.self) {
+            try PluginRegistry.register(GeometryPluginInterface.self, with: &registrations) {
                 return GeometryPluginObject()
             }
-            pluginRegistry = PluginRegistry(plugins)
+            pluginRegistry = PluginRegistry(registrations: registrations)
         } catch let error {
             print(error)
         }
