@@ -4,34 +4,33 @@ import Plugins
 
 enum GlobalScope {
     
-    static let pluginRegistry = PluginRegistry()
+    static private(set) var pluginRegistry = PluginRegistry(registrations: [:])
     
     // move elsewhere?
     static func registerPlugins(window: UIWindow?) {
-        Task {
-            do {
-                try await pluginRegistry.register(UIPluginInterface.self,
-                                                  activatedBy: UIPluginObject.notifications) {
-                    return UIPluginObject(window: window)
-                }
-                try await pluginRegistry.register(TabUIPluginInterface.self) {
-                    return TabUIPluginObject()
-                }
-                try await pluginRegistry.register(AppSwitcherPluginInterface.self) {
-                    return AppSwitcherPluginObject()
-                }
-                try await pluginRegistry.register(ExamPluginInterface.self) {
-                    return ExamPluginObject()
-                }
-                try await pluginRegistry.register(GraphingPluginInterface.self) {
-                    return GraphingPluginObject()
-                }
-                try await pluginRegistry.register(GeometryPluginInterface.self) {
-                    return GeometryPluginObject()
-                }
-            } catch let error {
-                print(error)
+        do {
+            var registrations = PluginRegistry.Registrations()
+            try PluginRegistry.register(UIPluginInterface.self, with: &registrations) {
+                return UIPluginObject(window: window)
             }
+            try PluginRegistry.register(TabUIPluginInterface.self, with: &registrations) {
+                return TabUIPluginObject()
+            }
+            try PluginRegistry.register(AppSwitcherPluginInterface.self, with: &registrations) {
+                return AppSwitcherPluginObject()
+            }
+            try PluginRegistry.register(ExamPluginInterface.self, with: &registrations) {
+                return ExamPluginObject()
+            }
+            try PluginRegistry.register(GraphingPluginInterface.self, with: &registrations) {
+                return GraphingPluginObject()
+            }
+            try PluginRegistry.register(GeometryPluginInterface.self, with: &registrations) {
+                return GeometryPluginObject()
+            }
+            pluginRegistry = PluginRegistry(registrations: registrations)
+        } catch let error {
+            print(error)
         }
     }
 }

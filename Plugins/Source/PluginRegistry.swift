@@ -1,54 +1,25 @@
 /// The central registration and lookup point for plugins.
 public actor PluginRegistry {
     
-    private var factories: [String: () -> Any] = [:]
-    private var pluginHandles: [String: AnyObject] = [:]
-    private var notificationHandlers: [Notification.Name: [String: (Notification) -> Void]] = [:]
+    public typealias Registrations = [String: () -> Any]
     
-    public init() {
-    }
-    
-    nonisolated private func makeIdentifier<PluginInterface>(describing pluginInterfaceType: PluginInterface.Type) -> String {
-        return String(describing: pluginInterfaceType)
-    }
-    
-    /// Register a plugin.
-    ///
-    /// - Parameters:
-    ///   - factory: The plugin object factory.
-    ///   - pluginInterfaceType: The plugin interface type.
-    public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
-                                                        factory: @escaping () -> PluginObject) async throws
+    public static func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
+                                                               with registrations: inout Registrations,
+                                                               factory: @escaping () -> PluginObject) throws
     where PluginObject: PluginLifecycle {
         let identifier = makeIdentifier(describing: pluginInterfaceType)
-        guard factories[identifier] == nil else {
+        guard registrations[identifier] == nil else {
             throw PluginError.pluginAlreadyRegistered
         }
         print("🗄️ PluginRegistry > registering \(identifier)")
-        factories[identifier] = factory
+        registrations[identifier] = factory
     }
     
-    public func register<PluginObject, PluginInterface>(_ pluginInterfaceType: PluginInterface.Type,
-                                                        activatedBy notificationNames: Set<NSNotification.Name>,
-                                                        factory: @escaping () -> PluginObject) async throws
-    where PluginObject: PluginLifecycle & NotificationActivatedPlugin {
-        try await register(pluginInterfaceType, factory: factory)
-        
-        let identifier = makeIdentifier(describing: pluginInterfaceType)
-        print("🗄️ PluginRegistry > registering notifications for \(identifier) 📫")
-        for notificationName in notificationNames {
-            // register plugin activator for notification name
-            var handlers = notificationHandlers[notificationName] ?? [:]
-            handlers[identifier] = { [weak self] notification in
-                self?.activateAndNotify(pluginInterfaceType, notification: notification)
-            }
-            notificationHandlers[notificationName] = handlers
-
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(handle(_:)),
-                                                   name: notificationName,
-                                                   object: nil)
-        }
+    private let registrations: Registrations
+    private var pluginHandles: [String: AnyObject] = [:]
+    
+    public init(registrations: Registrations) {
+        self.registrations = registrations
     }
     
     /// Look up a plugin.
@@ -57,7 +28,7 @@ public actor PluginRegistry {
     /// - Returns: A ``PluginHandle`` if successful.
     /// - Throws: PluginError.notRegistered if the given plugin interface type has not been registered.
     public func lookup<PluginInterface>(_ pluginInterfaceType: PluginInterface.Type) throws -> PluginHandle<PluginInterface> {
-        let identifier = makeIdentifier(describing: pluginInterfaceType)
+        let identifier = PluginRegistry.makeIdentifier(describing: pluginInterfaceType)
         return try lookup(pluginIdentifier: identifier)
     }
     
@@ -65,7 +36,7 @@ public actor PluginRegistry {
         if let pluginHandle = pluginHandles[identifier] {
             return pluginHandle as! PluginHandle<PluginInterface>
         }
-        guard let factory = factories[identifier] else {
+        guard let factory = registrations[identifier] else {
             throw PluginError.pluginNotRegistered
         }
         guard let pluginObject = factory() as? PluginInterface else {
@@ -81,41 +52,7 @@ public actor PluginRegistry {
         return pluginHandle
     }
     
-    nonisolated private func activateAndNotify<PluginInterface>(_ pluginInterfaceType: PluginInterface.Type, notification: Notification) {
-        print("🗄️ PluginRegistry > received \(notification.name.rawValue) 📬")
-        let identifier = makeIdentifier(describing: pluginInterfaceType)
-        Task {
-            do {
-                let pluginHandle = try await lookup(pluginInterfaceType)
-                if await pluginHandle.usageCount == 0 {
-                    print("🗄️ PluginRegistry > notification-activating \(identifier)")
-                    _ = try await pluginHandle.acquire() // activate the plugin
-                }
-                let pluginInterface = try await pluginHandle.acquire()
-                if let notificationActivatedPlugin = pluginInterface as? NotificationActivatedPlugin {
-                    await notificationActivatedPlugin.handle(notification)
-                }
-                try await pluginHandle.release()
-            } catch let error {
-                print(error)
-            }
-        }
-    }
-    
-    private func notifyListeners(_ notification: Notification) {
-        guard let handlers = notificationHandlers[notification.name] else {
-            return
-        }
-        for handler in handlers.values {
-            handler(notification)
-        }
-    }
-    
-    // MARK: Notifications
-    
-    @objc nonisolated private func handle(_ notification: Notification) {
-        Task {
-            await notifyListeners(notification)
-        }
+    nonisolated private static func makeIdentifier<PluginInterface>(describing pluginInterfaceType: PluginInterface.Type) -> String {
+        return String(describing: pluginInterfaceType)
     }
 }
