@@ -1,8 +1,8 @@
 /// A lightweight handle to a plugin.
 ///
-/// The plugin handle transparently handles the plugin lifecycle,
-/// and hides the concrete plugin object type from clients.
-public actor PluginHandle<PluginInterface> {
+/// The plugin handle transparently handles the plugin lifecycle.
+/// Also, it hides the concrete plugin object type from clients.
+public final class PluginHandle<PluginInterface> {
     
     private let pluginObject: PluginLifecycle
     private weak var registry: PluginRegistry?
@@ -16,17 +16,16 @@ public actor PluginHandle<PluginInterface> {
     /// Acquires a reference to the plugin interface.
     ///
     /// This will start the plugin if it is currently stopped.
-    public func acquire() async throws -> PluginInterface {
+    public func acquire() throws -> PluginInterface {
         print("🔌 PluginHandle > acquiring \(String(describing: PluginInterface.self))")
         if pluginObject.state == .stopped {
             do {
                 print("🔌 PluginHandle > acquiring dependencies for \(String(describing: PluginInterface.self))...")
                 if let registry = registry {
-                    try await pluginObject.acquireDependencies(from: registry)
+                    try pluginObject.acquireDependencies(from: registry)
                 }
                 print("🔌 PluginHandle > starting \(String(describing: pluginObject))...")
-                pluginObject.markAsStarting()
-                try await pluginObject.start()
+                try pluginObject.start()
                 assert(pluginObject.state == .started)
                 print("🔌 PluginHandle > \(String(describing: pluginObject)) started 🟢")
             }
@@ -41,9 +40,8 @@ public actor PluginHandle<PluginInterface> {
     
     /// Releases a reference to the plugin interface.
     ///
-    /// If this brings the plugin's usage count to zero, the plugin
-    /// will be stopped.
-    public func release() async throws {
+    /// If this brings the plugin's usage count to zero, the plugin will be stopped.
+    public func release() throws {
         print("🔌 PluginHandle > releasing \(String(describing: PluginInterface.self))")
         assert(usageCount > 0)
         usageCount -= 1
@@ -52,13 +50,12 @@ public actor PluginHandle<PluginInterface> {
             if usageCount == 0 {
                 do {
                     print("🔌 PluginHandle > stopping \(String(describing: pluginObject))...")
-                    pluginObject.markAsStopping()
-                    try await pluginObject.stop()
+                    try pluginObject.stop()
                     print("🔌 PluginHandle > \(String(describing: pluginObject)) stopped 🛑")
                     assert(pluginObject.state == .stopped)
                     print("🔌 PluginHandle > releasing dependencies for \(String(describing: PluginInterface.self))...")
                     if let registry = registry {
-                        try await pluginObject.releaseDependencies(in: registry)
+                        try pluginObject.releaseDependencies(in: registry)
                     }
                 }
                 catch let error {

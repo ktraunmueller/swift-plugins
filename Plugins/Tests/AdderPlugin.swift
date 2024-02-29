@@ -25,35 +25,17 @@ final class AdderPluginObject: AdderPluginInterface, PluginLifecycle {
 
     private(set) var state: PluginState = .stopped
     
-    func acquireDependencies(from: PluginRegistry) async throws {
+    func acquireDependencies(from: PluginRegistry) throws {
     }
     
-    func releaseDependencies(in: PluginRegistry) async throws {
+    func releaseDependencies(in: PluginRegistry) throws {
     }
     
-    func markAsStarting() {
-        state = .starting
-    }
-    
-    func start() async throws {
+    func start() throws {
         state = .started
     }
 
-    func markAsStopping() {
-        state = .stopping
-    }
-    
-    func stop() async throws {
+    func stop() throws {
         state = .stopped
-    }
-    
-    private(set) var usageCount = 0
-    
-    func incrementUsageCount() {
-        usageCount += 1
-    }
-    
-    func decrementUsageCount() {
-        usageCount -= 1
     }
 }

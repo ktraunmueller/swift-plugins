@@ -33,33 +33,23 @@ final class GraphingPluginObject: GraphingPluginInterface, PluginLifecycle {
     
     private(set) var state: Plugins.PluginState = .stopped
     
-    func acquireDependencies(from registry: PluginRegistry) async throws {
+    func acquireDependencies(from registry: PluginRegistry) throws {
         let appSwitcherPluginHandle = try registry.lookup(AppSwitcherPluginInterface.self)
-        appSwitcherPlugin = try await appSwitcherPluginHandle.acquire()
+        appSwitcherPlugin = try appSwitcherPluginHandle.acquire()
     }
     
-    func releaseDependencies(in registry: PluginRegistry) async throws {
+    func releaseDependencies(in registry: PluginRegistry) throws {
         let appSwitcherPluginHandle = try registry.lookup(AppSwitcherPluginInterface.self)
-        try await appSwitcherPluginHandle.release()
+        try appSwitcherPluginHandle.release()
         appSwitcherPlugin = nil
     }
     
-    func markAsStarting() {
-        state = .starting
-    }
-    
-    func start() async throws {
-        mainViewController = await MainActor.run {
-            GraphingCalculatorViewController(plugin: self)
-        }
+    func start() throws {
+        mainViewController = GraphingCalculatorViewController(plugin: self)
         state = .started
     }
     
-    func markAsStopping() {
-        state = .stopping
-    }
-    
-    func stop() async throws {
+    func stop() throws {
         mainViewController = nil
         state = .stopped
     }

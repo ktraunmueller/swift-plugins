@@ -31,40 +31,22 @@ final class CalculatorPluginObject: CalculatorPluginInterface, PluginLifecycle {
 
     private(set) var state: PluginState = .stopped
     
-    func acquireDependencies(from registry: PluginRegistry) async throws {
+    func acquireDependencies(from registry: PluginRegistry) throws {
         let adderPluginHandle = try registry.lookup(AdderPluginInterface.self)
-        adderPlugin = try await adderPluginHandle.acquire()
+        adderPlugin = try adderPluginHandle.acquire()
     }
     
-    func releaseDependencies(in registry: PluginRegistry) async throws {
+    func releaseDependencies(in registry: PluginRegistry) throws {
         let adderPluginHandle = try registry.lookup(AdderPluginInterface.self)
-        try await adderPluginHandle.release()
+        try adderPluginHandle.release()
         adderPlugin = nil
     }
-    
-    func markAsStarting() {
-        state = .starting
-    }
-    
-    func start() async throws {
+        
+    func start() throws {
         state = .started
     }
 
-    func markAsStopping() {
-        state = .stopping
-    }
-    
-    func stop() async throws {
+    func stop() throws {
         state = .stopped
-    }
-    
-    private(set) var usageCount = 0
-    
-    func incrementUsageCount() {
-        usageCount += 1
-    }
-    
-    func decrementUsageCount() {
-        usageCount -= 1
     }
 }

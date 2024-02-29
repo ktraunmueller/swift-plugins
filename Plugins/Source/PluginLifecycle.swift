@@ -13,21 +13,17 @@ public enum PluginState {
 /// Plugin objects are required to conform to ``PluginLifecycle``.
 /// 
 /// The plugin lifecycle will be handled transparently by ``PluginHandle``s.
-public protocol PluginLifecycle {
+public protocol PluginLifecycle: AnyObject {
     
     var state: PluginState { get }
 
     /// Acquire all depdendencies.
-    func acquireDependencies(from: PluginRegistry) async throws
+    func acquireDependencies(from: PluginRegistry) throws
     /// Release all dependencies.
-    func releaseDependencies(in: PluginRegistry) async throws
+    func releaseDependencies(in: PluginRegistry) throws
     
-    /// Sets state to `.starting`.
-    func markAsStarting()
     /// Tries to start the plugin. Sets the state to `.started` if successful, throws otherwise.
-    func start() async throws
-    /// Sets state to `.stopping`.
-    func markAsStopping()
+    func start() throws
     /// Tries to stop the plugin. Sets the state to `.stopped` if successful, throws otherwise.
-    func stop() async throws    
+    func stop() throws    
 }

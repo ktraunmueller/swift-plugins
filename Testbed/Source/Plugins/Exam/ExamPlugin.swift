@@ -9,9 +9,7 @@ protocol ExamPluginInterface: AnyObject {
     
     var isExamActive: Bool { get }
     var isExamActiveDidChange: any Publisher<Bool, Never> { get }
-    
-    func registerNotifications()
-    
+        
     func beginUserInitiatedExam()
     func endUserInitiatedExam()
 }
@@ -52,7 +50,8 @@ final class ExamPluginObject: ExamPluginInterface, PluginLifecycle {
     private(set) var isExamActive = false
     let isExamActiveDidChange: any Publisher<Bool, Never> = PassthroughSubject<Bool, Never>()
     
-    func registerNotifications() {
+    // move to AppDelegate
+//    func registerNotifications() {
 //        NotificationCenter.default.addObserver(self,
 //                                               selector: #selector(applicationDidFinishLaunching),
 //                                               name: UIApplication.didFinishLaunchingNotification,
@@ -69,7 +68,7 @@ final class ExamPluginObject: ExamPluginInterface, PluginLifecycle {
 //                                               selector: #selector(guidedAccessStatusDidChange),
 //                                               name: UIAccessibility.guidedAccessStatusDidChangeNotification,
 //                                               object: nil)
-    }
+//    }
     
     func beginUserInitiatedExam() {
     }
@@ -81,30 +80,24 @@ final class ExamPluginObject: ExamPluginInterface, PluginLifecycle {
     
     private(set) var state: Plugins.PluginState = .stopped
     
-    func acquireDependencies(from registry: PluginRegistry) async throws {
+    func acquireDependencies(from registry: PluginRegistry) throws {
+        assert(uiPlugin == nil)
         let uiPluginHandle = try registry.lookup(UIPluginInterface.self)
-        uiPlugin = try await uiPluginHandle.acquire()
+        uiPlugin = try uiPluginHandle.acquire()
     }
     
-    func releaseDependencies(in registry: PluginRegistry) async throws {
+    func releaseDependencies(in registry: PluginRegistry) throws {
+        assert(uiPlugin != nil)
         let uiPluginHandle = try registry.lookup(UIPluginInterface.self)
-        try await uiPluginHandle.release()
+        try uiPluginHandle.release()
         uiPlugin = nil
     }
     
-    func markAsStarting() {
-        state = .starting
-    }
-    
-    func start() async throws {
+    func start() throws {
         state = .started
     }
     
-    func markAsStopping() {
-        state = .stopping
-    }
-    
-    func stop() async throws {
+    func stop() throws {
         state = .stopped
     }
 }

@@ -9,8 +9,7 @@ enum GlobalScope {
     // move elsewhere?
     static func registerPlugins(window: UIWindow?) {
         do {
-            try pluginRegistry.register(UIPluginInterface.self,
-                                        activatedBy: UIPluginObject.notifications) {
+            try pluginRegistry.register(UIPluginInterface.self) {
                 return UIPluginObject(window: window)
             }
             try pluginRegistry.register(TabUIPluginInterface.self) {

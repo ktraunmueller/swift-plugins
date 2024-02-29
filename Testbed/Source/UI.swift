@@ -5,10 +5,10 @@ import UIKit
 enum UI {
     
     @MainActor
-    static func makeRootViewController() async -> UIViewController? {
+    static func makeRootViewController() -> UIViewController? {
         do {
             let appSwitcherPluginHandle = try GlobalScope.pluginRegistry.lookup(AppSwitcherPluginInterface.self)
-            let appSwitcherPlugin = try await appSwitcherPluginHandle.acquire()
+            let appSwitcherPlugin = try appSwitcherPluginHandle.acquire()
             let viewController = appSwitcherPlugin.appSwitcherViewController
             // note: the appSwitcherPlugin is never release()'d
             return viewController

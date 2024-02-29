@@ -2,10 +2,8 @@ import Plugins
 
 import UIKit
 
-protocol UIPluginInterface: AnyObject, NotificationActivatedPlugin {
+protocol UIPluginInterface: AnyObject {
         
-    func registerNotifications()
-    
     func presentOnRoot(_ viewController: UIViewController)
     func dismissFromRoot()
     
@@ -28,45 +26,7 @@ final class UIPluginObject: UIPluginInterface, PluginLifecycle {
         print("UIPlugin > UIPluginObject destroyed 🗑️")
     }
     
-    // MARK: Notifications
-    
-    @objc
-    private func applicationDidFinishLaunching() {
-    }
-    
-    @objc
-    private func applicationDidBecomeActive() {
-    }
-    
-    @objc
-    private func applicationWillResignActive() {
-    }
-    
-    @objc
-    private func guidedAccessStatusDidChange() {
-        //UIAccessibility.isGuidedAccessEnabled
-    }
-    
     // MARK: - UIPluginInterface
-    
-    func registerNotifications() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(applicationDidFinishLaunching),
-                                               name: UIApplication.didFinishLaunchingNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.applicationWillResignActive),
-                                               name: UIApplication.willResignActiveNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.applicationDidBecomeActive),
-                                               name: UIApplication.didBecomeActiveNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(guidedAccessStatusDidChange),
-                                               name: UIAccessibility.guidedAccessStatusDidChangeNotification,
-                                               object: nil)
-    }
     
     func presentOnRoot(_ viewController: UIViewController) {
         print("UIPlugin > presentOnRoot()")
@@ -112,42 +72,21 @@ final class UIPluginObject: UIPluginInterface, PluginLifecycle {
         }
     }
     
-    // MARK: - NotificationActivatedPlugin
-    
-    static let notifications: Set<NSNotification.Name> = [
-        UIApplication.didFinishLaunchingNotification,
-        UIApplication.willResignActiveNotification,
-        UIApplication.didBecomeActiveNotification,
-        UIAccessibility.guidedAccessStatusDidChangeNotification
-    ]
-    
-    func handle(_ notification: Notification) {
-        print("UIPlugin > handling \(notification.name.rawValue) 📭")
-    }
-    
     // MARK: - PluginLifecycle
     
     private(set) var state: Plugins.PluginState = .stopped
     
-    func acquireDependencies(from: PluginRegistry) async throws {
+    func acquireDependencies(from: PluginRegistry) throws {
     }
     
-    func releaseDependencies(in: PluginRegistry) async throws {
+    func releaseDependencies(in: PluginRegistry) throws {
     }
     
-    func markAsStarting() {
-        state = .starting
-    }
-    
-    func start() async throws {
+    func start() throws {
         state = .started
     }
     
-    func markAsStopping() {
-        state = .stopping
-    }
-    
-    func stop() async throws {
+    func stop() throws {
         state = .stopped
     }
 }

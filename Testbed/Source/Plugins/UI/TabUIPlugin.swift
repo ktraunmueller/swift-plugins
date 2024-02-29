@@ -29,30 +29,22 @@ final class TabUIPluginObject: TabUIPluginInterface, PluginLifecycle {
     
     private(set) var state: Plugins.PluginState = .stopped
     
-    func acquireDependencies(from registry: PluginRegistry) async throws {
+    func acquireDependencies(from registry: PluginRegistry) throws {
         let uiPluginHandle = try registry.lookup(UIPluginInterface.self)
-        uiPlugin = try await uiPluginHandle.acquire()
+        uiPlugin = try uiPluginHandle.acquire()
     }
     
-    func releaseDependencies(in registry: PluginRegistry) async throws {
+    func releaseDependencies(in registry: PluginRegistry) throws {
         let uiPluginHandle = try registry.lookup(UIPluginInterface.self)
-        try await uiPluginHandle.release()
+        try uiPluginHandle.release()
         uiPlugin = nil
     }
     
-    func markAsStarting() {
-        state = .starting
-    }
-    
-    func start() async throws {
+    func start() throws {
         state = .started
     }
     
-    func markAsStopping() {
-        state = .stopping
-    }
-    
-    func stop() async throws {
+    func stop() throws {
         state = .stopped
     }
 }

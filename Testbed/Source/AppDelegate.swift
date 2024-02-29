@@ -13,10 +13,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         
         GlobalScope.registerPlugins(window: window)
         
-        Task {
-            window?.rootViewController = await UI.makeRootViewController()
-            window?.makeKeyAndVisible()
-        }
+        window?.rootViewController = UI.makeRootViewController()
+        window?.makeKeyAndVisible()
         
         return true
     }
