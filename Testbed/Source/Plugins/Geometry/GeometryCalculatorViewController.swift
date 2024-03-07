@@ -1,6 +1,5 @@
 import UIKit
 
-@MainActor
 final class GeometryCalculatorViewController: UIViewController {
 
     private weak var plugin: GeometryPluginObject?

@@ -1,6 +1,5 @@
 import UIKit
 
-@MainActor
 final class AppSwitcherViewController: UIViewController {
 
     private weak var plugin: AppSwitcherPluginObject?

@@ -1,6 +1,5 @@
 import UIKit
 
-@MainActor
 final class GraphingCalculatorViewController: UIViewController {
 
     private weak var plugin: GraphingPluginObject?

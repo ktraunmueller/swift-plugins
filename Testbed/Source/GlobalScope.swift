@@ -4,31 +4,29 @@ import Plugins
 
 enum GlobalScope {
     
-    static private(set) var pluginRegistry = PluginRegistry(registrations: [:])
+    static let pluginRegistry = PluginRegistry()
     
     // move elsewhere?
     static func registerPlugins(window: UIWindow?) {
         do {
-            var registrations = PluginRegistry.Registrations()
-            try PluginRegistry.register(UIPluginInterface.self, with: &registrations) {
+            try pluginRegistry.register(UIPluginInterface.self) {
                 return UIPluginObject(window: window)
             }
-            try PluginRegistry.register(TabUIPluginInterface.self, with: &registrations) {
+            try pluginRegistry.register(TabUIPluginInterface.self) {
                 return TabUIPluginObject()
             }
-            try PluginRegistry.register(AppSwitcherPluginInterface.self, with: &registrations) {
+            try pluginRegistry.register(AppSwitcherPluginInterface.self) {
                 return AppSwitcherPluginObject()
             }
-            try PluginRegistry.register(ExamPluginInterface.self, with: &registrations) {
+            try pluginRegistry.register(ExamPluginInterface.self) {
                 return ExamPluginObject()
             }
-            try PluginRegistry.register(GraphingPluginInterface.self, with: &registrations) {
+            try pluginRegistry.register(GraphingPluginInterface.self) {
                 return GraphingPluginObject()
             }
-            try PluginRegistry.register(GeometryPluginInterface.self, with: &registrations) {
+            try pluginRegistry.register(GeometryPluginInterface.self) {
                 return GeometryPluginObject()
             }
-            pluginRegistry = PluginRegistry(registrations: registrations)
         } catch let error {
             print(error)
         }

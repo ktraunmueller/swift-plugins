@@ -2,14 +2,14 @@ import Plugins
 
 import UIKit
 
-protocol TabUIPluginInterface: Actor {
+protocol TabUIPluginInterface: AnyObject {
     // dependencies
     var uiPlugin: UIPluginInterface? { get }
     
     var tabBarController: UITabBarController? { get }
 }
 
-actor TabUIPluginObject: TabUIPluginInterface, PluginLifecycle {
+final class TabUIPluginObject: TabUIPluginInterface, PluginLifecycle {
     
     init() {
         print("TabUIPlugin > TabUIPluginObject created 🎉")
@@ -29,30 +29,22 @@ actor TabUIPluginObject: TabUIPluginInterface, PluginLifecycle {
     
     private(set) var state: Plugins.PluginState = .stopped
     
-    func acquireDependencies(from registry: PluginRegistry) async throws {
-        let uiPluginHandle = try await registry.lookup(UIPluginInterface.self)
-        uiPlugin = try await uiPluginHandle.acquire()
+    func acquireDependencies(from registry: PluginRegistry) throws {
+        let uiPluginHandle = try registry.lookup(UIPluginInterface.self)
+        uiPlugin = try uiPluginHandle.acquire()
     }
     
-    func releaseDependencies(in registry: PluginRegistry) async throws {
-        let uiPluginHandle = try await registry.lookup(UIPluginInterface.self)
-        try await uiPluginHandle.release()
+    func releaseDependencies(in registry: PluginRegistry) throws {
+        let uiPluginHandle = try registry.lookup(UIPluginInterface.self)
+        try uiPluginHandle.release()
         uiPlugin = nil
     }
     
-    func markAsStarting() {
-        state = .starting
-    }
-    
-    func start() async throws {
+    func start() throws {
         state = .started
     }
     
-    func markAsStopping() {
-        state = .stopping
-    }
-    
-    func stop() async throws {
+    func stop() throws {
         state = .stopped
     }
 }

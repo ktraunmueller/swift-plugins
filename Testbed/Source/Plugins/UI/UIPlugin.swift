@@ -2,28 +2,19 @@ import Plugins
 
 import UIKit
 
-/// Note: All protocol requirements should be declared `@MainActor`, since
-/// they are all about interacting with the UI.
-protocol UIPluginInterface: Actor {
+protocol UIPluginInterface: AnyObject {
         
-    @MainActor
     func presentOnRoot(_ viewController: UIViewController)
-    @MainActor
     func dismissFromRoot()
     
-    @MainActor
-    func lockIntoSingleAppMode(completion: ((_ success: Bool) -> Void)?) async
-    @MainActor
-    func unlockFromSingleAppMode(completion: ((_ success: Bool) -> Void)?) async
+    func lockIntoSingleAppMode(completion: ((_ success: Bool) -> Void)?)
+    func unlockFromSingleAppMode(completion: ((_ success: Bool) -> Void)?)
 }
 
-actor UIPluginObject: UIPluginInterface, PluginLifecycle {
+final class UIPluginObject: UIPluginInterface, PluginLifecycle {
     
-    @MainActor
     private weak var window: UIWindow?
-    @MainActor
     private var endGuidedAccessSessionRetryCount = 0
-    @MainActor
     private let endGuidedAccessSessionMaxRetries = 5
     
     init(window: UIWindow?) {
@@ -37,7 +28,6 @@ actor UIPluginObject: UIPluginInterface, PluginLifecycle {
     
     // MARK: - UIPluginInterface
     
-    @MainActor
     func presentOnRoot(_ viewController: UIViewController) {
         print("UIPlugin > presentOnRoot()")
         guard let rootViewController = window?.rootViewController else {
@@ -50,7 +40,6 @@ actor UIPluginObject: UIPluginInterface, PluginLifecycle {
         })
     }
     
-    @MainActor
     func dismissFromRoot() {
         print("UIPlugin > dismissFromRoot()")
         guard let rootViewController = window?.rootViewController else {
@@ -59,7 +48,6 @@ actor UIPluginObject: UIPluginInterface, PluginLifecycle {
         rootViewController.dismiss(animated: true)
     }
     
-    @MainActor
     func lockIntoSingleAppMode(completion: ((Bool) -> Void)?) {
         endGuidedAccessSessionRetryCount = 0
         UIAccessibility.requestGuidedAccessSession(enabled: true) { success in
@@ -67,7 +55,6 @@ actor UIPluginObject: UIPluginInterface, PluginLifecycle {
         }
     }
     
-    @MainActor
     func unlockFromSingleAppMode(completion: ((Bool) -> Void)?) {
         UIAccessibility.requestGuidedAccessSession(enabled: true) { success in
             if success {
@@ -89,25 +76,17 @@ actor UIPluginObject: UIPluginInterface, PluginLifecycle {
     
     private(set) var state: Plugins.PluginState = .stopped
     
-    func acquireDependencies(from: PluginRegistry) async throws {
+    func acquireDependencies(from: PluginRegistry) throws {
     }
     
-    func releaseDependencies(in: PluginRegistry) async throws {
+    func releaseDependencies(in: PluginRegistry) throws {
     }
     
-    func markAsStarting() {
-        state = .starting
-    }
-    
-    func start() async throws {
+    func start() throws {
         state = .started
     }
     
-    func markAsStopping() {
-        state = .stopping
-    }
-    
-    func stop() async throws {
+    func stop() throws {
         state = .stopped
     }
 }
