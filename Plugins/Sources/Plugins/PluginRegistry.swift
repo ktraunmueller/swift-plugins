@@ -5,7 +5,6 @@ public final class PluginRegistry {
     
     private var factories: [String: () -> Any] = [:]
     private var pluginHandles: [String: AnyObject] = [:]
-    private var notificationHandlers: [Notification.Name: [String: (Notification) -> Void]] = [:]
     
     public init() {
     }

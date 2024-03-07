@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E5C334C2B99F937001007DE /* Plugins in Frameworks */ = {isa = PBXBuildFile; productRef = 8E5C334B2B99F937001007DE /* Plugins */; };
 		8EC9EB6F2B037F2D0087A565 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8EC9EB652B037F2D0087A565 /* Assets.xcassets */; };
 		8EC9EB702B037F2D0087A565 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EC9EB662B037F2D0087A565 /* LaunchScreen.storyboard */; };
 		8EC9EB732B037F2D0087A565 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9EB6C2B037F2D0087A565 /* AppDelegate.swift */; };
@@ -19,8 +20,6 @@
 		8ED706282B03A0CE0058BF87 /* GeometryPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED706272B03A0CE0058BF87 /* GeometryPlugin.swift */; };
 		8ED7062D2B03B5500058BF87 /* GeometryCalculatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED7062C2B03B5500058BF87 /* GeometryCalculatorViewController.swift */; };
 		8EFA43032B04A4E000B9CD74 /* TabUIPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFA43022B04A4E000B9CD74 /* TabUIPlugin.swift */; };
-		8EFA43042B04A60B00B9CD74 /* Plugins.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC9EB7A2B037F830087A565 /* Plugins.framework */; };
-		8EFA43052B04A60B00B9CD74 /* Plugins.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC9EB7A2B037F830087A565 /* Plugins.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8EFA43092B04B3C400B9CD74 /* AppSwitcherPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFA43082B04B3C400B9CD74 /* AppSwitcherPlugin.swift */; };
 		8EFA430B2B04B60000B9CD74 /* AppSwitcherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFA430A2B04B60000B9CD74 /* AppSwitcherViewController.swift */; };
 		8EFC49302B0F586200E9E6E5 /* ExamPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFC492F2B0F586200E9E6E5 /* ExamPlugin.swift */; };
@@ -35,20 +34,6 @@
 			remoteInfo = Testbed;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		8EFA43062B04A60B00B9CD74 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				8EFA43052B04A60B00B9CD74 /* Plugins.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		8EC9EB172B037E7C0087A565 /* Testbed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Testbed.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,7 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8EFA43042B04A60B00B9CD74 /* Plugins.framework in Frameworks */,
+				8E5C334C2B99F937001007DE /* Plugins in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,13 +207,15 @@
 				8EC9EB132B037E7C0087A565 /* Sources */,
 				8EC9EB142B037E7C0087A565 /* Frameworks */,
 				8EC9EB152B037E7C0087A565 /* Resources */,
-				8EFA43062B04A60B00B9CD74 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Testbed;
+			packageProductDependencies = (
+				8E5C334B2B99F937001007DE /* Plugins */,
+			);
 			productName = Testbed;
 			productReference = 8EC9EB172B037E7C0087A565 /* Testbed.app */;
 			productType = "com.apple.product-type.application";
@@ -279,6 +266,9 @@
 				Base,
 			);
 			mainGroup = 8EC9EB0E2B037E7C0087A565;
+			packageReferences = (
+				8E5C334A2B99F937001007DE /* XCLocalSwiftPackageReference ".." */,
+			);
 			productRefGroup = 8EC9EB182B037E7C0087A565 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -599,6 +589,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		8E5C334A2B99F937001007DE /* XCLocalSwiftPackageReference ".." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8E5C334B2B99F937001007DE /* Plugins */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Plugins;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8EC9EB0F2B037E7C0087A565 /* Project object */;
 }
