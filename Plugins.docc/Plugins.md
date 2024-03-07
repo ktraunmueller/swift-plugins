@@ -30,13 +30,14 @@ The implementation of the plugin interface is provided by a corresponding _plugi
 ```swift
 final class AdderPluginObject: AdderPluginInterface, PluginLifecycle {
     
-    // MARK: AdderPluginInterface
+    // MARK: - AdderPluginInterface
 
     func add(lhs: Int, rhs: Int) -> Int {
+        print("AdderPlugin > AdderPluginObject add(\(lhs), \(rhs))")
         return lhs + rhs
     }
 
-    // MARK: PluginLifecycle
+    // MARK: - PluginLifecycle
     ...
 }
 ```
@@ -47,8 +48,8 @@ should only occur during plugin startup (see plugin lifecycle below).
 
 ### The Plugin Lifecycle
 
-Plugins are instantiated and prepared for use ("activated") only when needed. Regardless of the number of 
-plugins registered in a system, initially there will be zero plugin objects in memory. 
+Plugins are instantiated and prepared for use ("activated") only when needed. Regardless of 
+the number of plugins registered in a system, initially there will be zero plugin objects in memory. 
 In addition to being lazy-activated, plugins which are no longer needed are shut down, 
 and their plugin objects deallocated.
 
@@ -68,13 +69,15 @@ public enum PluginState {
     case stopping
 }
 
-public protocol PluginLifecycle {
+public protocol PluginLifecycle: AnyObject {
+    
     var state: PluginState { get }
 
-    func markAsStarting()
-    func start() async throws
-    func markAsStopping()
-    func stop() async throws 
+    func acquireDependencies(from: PluginRegistry) throws
+    func releaseDependencies(in: PluginRegistry) throws
+    
+    func start() throws
+    func stop() throws    
 }
 ```
 
@@ -106,6 +109,7 @@ In order to consume functionality provided by a plugin, clients need to look up 
 ```swift
 do {
     let pluginHandle = try registry.lookup(AdderPluginInterface.self)
+    ...
 } catch PluginError.notRegistered { }
 ```
 
@@ -132,9 +136,6 @@ startup, clients need to ``PluginHandle/acquire()`` a reference to the plugin
 interface. Only at this point will the plugin be started if it's in the 
 stopped state. 
 
-> Note: This is also the reason why ``PluginHandle/acquire()`` is an
-asynchronous function.
-
 If plugin startup has been successful, clients can then consume the services
 provided by the plugin through the plugin interface.
 
@@ -146,7 +147,3 @@ will increment and decrement, respectively, an internal usage count.
 When this usage count reaches zero, the plugin will be stopped, and any associated
 resources will be released. The plugin handle will stay valid, though. On the
 next call to ``PluginHandle/acquire()``, the plugin will be started again.
-
-## Topics
-
-TODO threading?
