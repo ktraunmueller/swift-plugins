@@ -3,7 +3,7 @@ import XCTest
 
 final class PluginsTests: XCTestCase {
     
-    func testRegistrationAndLookup() async throws {
+    func testRegistrationAndLookup() throws {
         let registry = PluginRegistry()
         try registry.register(AdderPluginInterface.self) {
             return AdderPluginObject()
@@ -18,7 +18,7 @@ final class PluginsTests: XCTestCase {
         }
     }
     
-    func testShutdownWhenUsageCountReachesZero() async throws {
+    func testShutdownWhenUsageCountReachesZero() throws {
         let registry = PluginRegistry()
         try registry.register(AdderPluginInterface.self) {
             return AdderPluginObject()
